@@ -422,6 +422,22 @@ function wpcm_ajax_test_airtable() {
     }
 
     $count = count( $result );
+
+    if ( 0 === $count ) {
+        $allowed_statuses = get_option( 'wpcm_mentor_statuses', 'Active' );
+        $available_statuses = $api->get_all_statuses();
+
+        if ( is_array( $available_statuses ) && ! empty( $available_statuses ) ) {
+            wp_send_json_success(
+                sprintf(
+                    __( 'Connection successful, but 0 mentors matched Allowed Statuses (%1$s). Available statuses in this table: %2$s', 'wpcredits-mentors' ),
+                    $allowed_statuses,
+                    implode( ', ', $available_statuses )
+                )
+            );
+        }
+    }
+
     wp_send_json_success(
         sprintf(
             __( 'Connection successful. %d active mentors found.', 'wpcredits-mentors' ),
