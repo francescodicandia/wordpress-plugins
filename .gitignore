@@ -1,18 +1,25 @@
-# OS files
-.DS_Store
-Thumbs.db
+# Ignore everything at repo root by default.
+/*
 
-# Environment
+# Keep repo metadata/docs.
+!/.gitignore
+!/README.md
+
+# Keep WordPress plugin directories.
+!/wordpress-*/
+!/wordpress-*/**
+
+# Local/environment files.
 .env
 .env.local
 
-# Logs
-*.log
-
-# IDE
+# OS / IDE / logs.
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
 *.sublime-*
+*.log
 
-# Node / build artifacts (if any)
+# Node / build artifacts.
 node_modules/
