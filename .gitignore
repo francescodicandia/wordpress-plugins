@@ -4,6 +4,7 @@
 # Keep repo metadata/docs.
 !/.gitignore
 !/README.md
+!/LICENSE
 
 # Keep WordPress plugin directories.
 !/wordpress-*/

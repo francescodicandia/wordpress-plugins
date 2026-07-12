@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">WordPress Credits Mentors settings preview</title>
+  <desc id="desc">Illustrative preview of the plugin settings page with Airtable token, allowed statuses, and available fields.</desc>
+  <rect width="1280" height="760" fill="#f6f7f7"/>
+  <rect x="48" y="40" width="1184" height="680" rx="16" fill="#ffffff" stroke="#dcdcde"/>
+  <text x="88" y="104" fill="#1d2327" font-family="Arial, sans-serif" font-size="34" font-weight="700">WordPress Credits Mentors Settings</text>
+  <rect x="88" y="144" width="1104" height="148" rx="12" fill="#f9f9f9" stroke="#dcdcde"/>
+  <text x="120" y="190" fill="#1d2327" font-family="Arial, sans-serif" font-size="20" font-weight="700">Airtable API Token</text>
+  <rect x="120" y="208" width="540" height="42" rx="8" fill="#ffffff" stroke="#8c8f94"/>
+  <text x="140" y="235" fill="#8c8f94" font-family="Courier New, monospace" font-size="20">pat***********************</text>
+  <text x="720" y="190" fill="#1d2327" font-family="Arial, sans-serif" font-size="20" font-weight="700">Allowed Statuses</text>
+  <rect x="720" y="208" width="360" height="42" rx="8" fill="#ffffff" stroke="#8c8f94"/>
+  <text x="740" y="235" fill="#1d2327" font-family="Arial, sans-serif" font-size="20">Active</text>
+  <rect x="1096" y="206" width="84" height="46" rx="8" fill="#2271b1"/>
+  <text x="1115" y="235" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Save</text>
+  <text x="120" y="330" fill="#1d2327" font-family="Arial, sans-serif" font-size="28" font-weight="700">Available Airtable Fields</text>
+  <rect x="120" y="358" width="1040" height="290" rx="12" fill="#ffffff" stroke="#dcdcde"/>
+  <rect x="120" y="358" width="1040" height="54" rx="12" fill="#f0f0f1"/>
+  <text x="154" y="392" fill="#1d2327" font-family="Arial, sans-serif" font-size="18" font-weight="700">Field Name</text>
+  <text x="856" y="392" fill="#1d2327" font-family="Arial, sans-serif" font-size="18" font-weight="700">Type</text>
+  <g fill="#1d2327" font-family="Arial, sans-serif" font-size="18">
+    <text x="154" y="452">Full Name</text><text x="856" y="452">singleLineText</text>
+    <text x="154" y="504">Email</text><text x="856" y="504">email</text>
+    <text x="154" y="556">WordPress profile</text><text x="856" y="556">url</text>
+    <text x="154" y="608">Contribution Area - Expertise</text><text x="856" y="608">multipleSelects</text>
+  </g>
+  <rect x="120" y="666" width="280" height="20" rx="10" fill="#e8f0fe"/>
+  <text x="120" y="712" fill="#50575e" font-family="Arial, sans-serif" font-size="17">Preview illustrativa della configurazione admin.</text>
+</svg>

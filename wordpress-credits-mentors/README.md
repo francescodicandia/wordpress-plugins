@@ -2,6 +2,22 @@
 
 Plugin WordPress che mostra i mentor del programma WordPress Credits via shortcode. I dati vengono caricati da Airtable.
 
+## Screenshot
+
+Le immagini sotto sono preview illustrative del plugin.
+
+### Admin settings
+
+![WordPress Credits Mentors settings preview](assets/screenshots/settings-preview.svg)
+
+### Frontend grid view
+
+![WordPress Credits Mentors grid preview](assets/screenshots/grid-preview.svg)
+
+### Frontend table view
+
+![WordPress Credits Mentors table preview](assets/screenshots/table-preview.svg)
+
 ## Requisiti
 
 - WordPress 5.0+
@@ -39,6 +55,10 @@ Plugin WordPress che mostra i mentor del programma WordPress Credits via shortco
 | `fields`  | Colonne nella vista table (nomi campi Airtable) | `Full Name, Email, WordPress profile, Contribution Area - Expertise, Available hours per week, Sponsor company` |
 
 Alias backward-compatibili per `fields`: `name`, `email`, `expertise`, `hours`, `sponsor`, `profile`, `status`, `company`.
+
+## Licenza
+
+Questo plugin e' distribuito sotto **GPL-2.0-or-later**.
 
 ## Sviluppo
 

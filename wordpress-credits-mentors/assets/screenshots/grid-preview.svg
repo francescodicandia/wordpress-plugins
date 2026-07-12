@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">WordPress Credits Mentors grid preview</title>
+  <desc id="desc">Illustrative preview of mentor cards with avatar, name, expertise tags, and sponsor badge.</desc>
+  <rect width="1280" height="760" fill="#f6f7f7"/>
+  <text x="76" y="84" fill="#1d2327" font-family="Arial, sans-serif" font-size="34" font-weight="700">[wpcredits_mentors]</text>
+  <g transform="translate(76 128)">
+    <g>
+      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
+      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
+      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
+      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
+      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Jane Mentor</text>
+      <rect x="78" y="264" width="90" height="30" rx="15" fill="#e8f0fe"/><text x="123" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Core</text>
+      <rect x="178" y="264" width="96" height="30" rx="15" fill="#e8f0fe"/><text x="226" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Design</text>
+      <rect x="118" y="308" width="114" height="30" rx="15" fill="#e8f0fe"/><text x="175" y="328" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Docs</text>
+      <rect x="86" y="386" width="178" height="28" rx="14" fill="#f0f0f1"/><text x="175" y="405" text-anchor="middle" fill="#50575e" font-family="Arial, sans-serif" font-size="15">Sponsored by Example Co.</text>
+    </g>
+    <g transform="translate(389 0)">
+      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
+      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
+      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
+      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
+      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Marco Contributor</text>
+      <rect x="72" y="264" width="110" height="30" rx="15" fill="#e8f0fe"/><text x="127" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Community</text>
+      <rect x="194" y="264" width="86" height="30" rx="15" fill="#e8f0fe"/><text x="237" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Polyglots</text>
+    </g>
+    <g transform="translate(778 0)">
+      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
+      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
+      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
+      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
+      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Aisha Supporter</text>
+      <rect x="100" y="264" width="150" height="30" rx="15" fill="#e8f0fe"/><text x="175" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Training Team</text>
+    </g>
+  </g>
+</svg>
