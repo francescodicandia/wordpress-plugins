@@ -22,17 +22,23 @@ Le immagini sotto sono preview illustrative del plugin.
 
 - WordPress 5.0+
 - PHP 7.4+
-- Airtable base con tabella mentors configurata
+- Airtable token con accesso lettura alla base
+- Permesso Airtable **Meta API / schema** per usare table view e field discovery nell'admin
+- Airtable **Base ID** e **Table ID** della tabella mentors da configurare nel backend del plugin
 
 ## Installazione
 
 1. Scarica la cartella `wordpress-credits-mentors` in `/wp-content/plugins/`
 2. Attiva il plugin da WP Admin
 3. Vai in **Impostazioni → Credits Mentors** e configura:
-   - **Airtable API Token** — Personal Access Token con accesso in lettura alla base
+   - **Airtable Base ID** — ID della base Airtable (es. `appXXXXXXXXXXXXXX`)
+   - **Airtable Table ID** — ID della tabella Airtable (es. `tblXXXXXXXXXXXXXX`)
+   - **Airtable API Token** — Personal Access Token con accesso in lettura alla base e ai metadata/schema Airtable
    - **Allowed Statuses** — Status records da includere (default: `Active`)
 
-Per l'installazione standard non serve aggiungere nulla a `wp-config.php`: il plugin usa gia' i valori di base e tabella previsti per questo progetto.
+Non serve aggiungere nulla a `wp-config.php`: la configurazione Airtable viene salvata nel database tramite il backend del plugin.
+
+Nota sulla cache: i mentors e i field names vengono cacheati per 1 ora, mentre la lista degli statuses disponibili viene cacheata per 1 giorno.
 
 ## Shortcode
 

@@ -34,8 +34,85 @@ class WPCM_Admin {
     }
 
     public function register_settings() {
-        register_setting( 'wpcm_settings', 'wpcm_airtable_token' );
-        register_setting( 'wpcm_settings', 'wpcm_mentor_statuses' );
+        register_setting(
+            'wpcm_settings',
+            'wpcm_airtable_base_id',
+            array(
+                'sanitize_callback' => array( $this, 'sanitize_airtable_base_id' ),
+            )
+        );
+
+        register_setting(
+            'wpcm_settings',
+            'wpcm_airtable_table_id',
+            array(
+                'sanitize_callback' => array( $this, 'sanitize_airtable_table_id' ),
+            )
+        );
+
+        register_setting(
+            'wpcm_settings',
+            'wpcm_airtable_token',
+            array(
+                'sanitize_callback' => array( $this, 'sanitize_airtable_token' ),
+            )
+        );
+
+        register_setting(
+            'wpcm_settings',
+            'wpcm_mentor_statuses',
+            array(
+                'sanitize_callback' => array( $this, 'sanitize_mentor_statuses' ),
+            )
+        );
+    }
+
+    public function sanitize_airtable_base_id( $value ) {
+        $this->clear_plugin_caches(
+            get_option( 'wpcm_airtable_base_id', '' ),
+            get_option( 'wpcm_airtable_table_id', '' ),
+            sanitize_text_field( $value ),
+            isset( $_POST['wpcm_airtable_table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['wpcm_airtable_table_id'] ) ) : get_option( 'wpcm_airtable_table_id', '' )
+        );
+
+        return sanitize_text_field( $value );
+    }
+
+    public function sanitize_airtable_table_id( $value ) {
+        $this->clear_plugin_caches(
+            get_option( 'wpcm_airtable_base_id', '' ),
+            get_option( 'wpcm_airtable_table_id', '' ),
+            isset( $_POST['wpcm_airtable_base_id'] ) ? sanitize_text_field( wp_unslash( $_POST['wpcm_airtable_base_id'] ) ) : get_option( 'wpcm_airtable_base_id', '' ),
+            sanitize_text_field( $value )
+        );
+
+        return sanitize_text_field( $value );
+    }
+
+    public function sanitize_airtable_token( $value ) {
+        $this->clear_plugin_caches();
+
+        return sanitize_text_field( $value );
+    }
+
+    public function sanitize_mentor_statuses( $value ) {
+        delete_transient( 'wpcm_mentors' );
+
+        return sanitize_text_field( $value );
+    }
+
+    private function clear_plugin_caches( $old_base_id = '', $old_table_id = '', $new_base_id = '', $new_table_id = '' ) {
+        delete_transient( 'wpcm_mentors' );
+        delete_transient( 'wpcm_all_statuses' );
+        delete_transient( 'wpcm_valid_field_names' );
+
+        if ( ! empty( $old_base_id ) && ! empty( $old_table_id ) ) {
+            delete_transient( 'wpcm_table_fields_' . md5( $old_base_id . '|' . $old_table_id ) );
+        }
+
+        if ( ! empty( $new_base_id ) && ! empty( $new_table_id ) ) {
+            delete_transient( 'wpcm_table_fields_' . md5( $new_base_id . '|' . $new_table_id ) );
+        }
     }
 
     public function add_settings_link( $links ) {
@@ -49,8 +126,10 @@ class WPCM_Admin {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpcredits-mentors' ) );
         }
 
+        $base_id  = get_option( 'wpcm_airtable_base_id', '' );
+        $table_id = get_option( 'wpcm_airtable_table_id', '' );
         $token    = get_option( 'wpcm_airtable_token' );
-        $statuses = get_option( 'wpcm_mentor_statuses', 'Active, Vetted - positive' );
+        $statuses = get_option( 'wpcm_mentor_statuses', 'Active' );
 
         $all_statuses = get_transient( 'wpcm_all_statuses' );
         if ( false === $all_statuses && ! empty( $token ) ) {
@@ -65,9 +144,53 @@ class WPCM_Admin {
         <div class="wrap">
             <h1><?php echo esc_html__( 'WordPress Credits Mentors Settings', 'wpcredits-mentors' ); ?></h1>
 
+            <p class="description">
+                <?php echo esc_html__( 'The Airtable API token was already configured from this screen. Base ID and Table ID are now also configured here instead of being stored in code.', 'wpcredits-mentors' ); ?>
+            </p>
+
             <form method="post" action="options.php">
                 <?php settings_fields( 'wpcm_settings' ); ?>
                 <table class="form-table">
+                    <tr>
+                        <th scope="row">
+                            <label for="wpcm_airtable_base_id"><?php echo esc_html__( 'Airtable Base ID', 'wpcredits-mentors' ); ?></label>
+                        </th>
+                        <td>
+                            <input
+                                type="text"
+                                id="wpcm_airtable_base_id"
+                                name="wpcm_airtable_base_id"
+                                value="<?php echo esc_attr( $base_id ); ?>"
+                                class="regular-text"
+                            />
+                            <p class="description">
+                                <?php echo esc_html__( 'Enter the Airtable Base ID (for example: appXXXXXXXXXXXXXX).', 'wpcredits-mentors' ); ?>
+                            </p>
+                            <p class="description">
+                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Base ID?', 'wpcredits-mentors' ); ?></a>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="wpcm_airtable_table_id"><?php echo esc_html__( 'Airtable Table ID', 'wpcredits-mentors' ); ?></label>
+                        </th>
+                        <td>
+                            <input
+                                type="text"
+                                id="wpcm_airtable_table_id"
+                                name="wpcm_airtable_table_id"
+                                value="<?php echo esc_attr( $table_id ); ?>"
+                                class="regular-text"
+                            />
+                            <p class="description">
+                                <?php echo esc_html__( 'Enter the Airtable Table ID (for example: tblXXXXXXXXXXXXXX).', 'wpcredits-mentors' ); ?>
+                            </p>
+                            <p class="description">
+                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Table ID?', 'wpcredits-mentors' ); ?></a>
+                            </p>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row">
                             <label for="wpcm_airtable_token"><?php echo esc_html__( 'Airtable API Token', 'wpcredits-mentors' ); ?></label>
@@ -82,6 +205,9 @@ class WPCM_Admin {
                             />
                             <p class="description">
                                 <?php echo esc_html__( 'Enter your Airtable personal access token.', 'wpcredits-mentors' ); ?>
+                            </p>
+                            <p class="description">
+                                <a href="https://airtable.com/create/tokens" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Create or manage Airtable personal access tokens', 'wpcredits-mentors' ); ?></a>
                             </p>
                         </td>
                     </tr>
@@ -124,16 +250,25 @@ class WPCM_Admin {
             <?php
             $display_field_types = array( 'singleLineText', 'multilineText', 'richText', 'email', 'url', 'phoneNumber', 'singleSelect', 'multipleSelects' );
             $available_fields = array();
+            $fields_error = null;
             if ( ! empty( $token ) ) {
                 $api = new WPCM_Airtable_API();
                 $all_fields = $api->get_table_fields();
-                foreach ( $all_fields as $f ) {
-                    if ( in_array( $f['type'], $display_field_types, true ) ) {
-                        $available_fields[] = $f;
+                if ( is_wp_error( $all_fields ) ) {
+                    $fields_error = $all_fields->get_error_message();
+                } elseif ( is_array( $all_fields ) ) {
+                    foreach ( $all_fields as $f ) {
+                        if ( in_array( $f['type'], $display_field_types, true ) ) {
+                            $available_fields[] = $f;
+                        }
                     }
                 }
             }
             ?>
+
+            <?php if ( ! empty( $fields_error ) ) : ?>
+                <p class="notice notice-error inline"><span><?php echo esc_html( $fields_error ); ?></span></p>
+            <?php endif; ?>
 
             <?php if ( ! empty( $available_fields ) ) : ?>
                 <hr />

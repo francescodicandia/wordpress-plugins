@@ -16,14 +16,16 @@ class WPCM_Airtable_API {
     private $table_id;
 
     public function __construct() {
-        $this->token   = get_option( 'wpcm_airtable_token', '' );
-        $this->base_id = WPCM_AIRTABLE_BASE_ID;
-        $this->table_id = WPCM_AIRTABLE_TABLE_ID;
+        $this->token    = get_option( 'wpcm_airtable_token', '' );
+        $this->base_id  = get_option( 'wpcm_airtable_base_id', '' );
+        $this->table_id = get_option( 'wpcm_airtable_table_id', '' );
     }
 
     public function fetch_mentors() {
-        if ( empty( $this->token ) ) {
-            return new WP_Error( 'missing_token', __( 'Airtable token is not configured.', 'wpcredits-mentors' ) );
+        $config_error = $this->validate_configuration();
+
+        if ( is_wp_error( $config_error ) ) {
+            return $config_error;
         }
 
         $mentors = array();
@@ -31,26 +33,16 @@ class WPCM_Airtable_API {
         $url     = "https://api.airtable.com/v0/{$this->base_id}/{$this->table_id}";
 
         do {
-            $args = array(
-                'headers' => array(
-                    'Authorization' => "Bearer {$this->token}",
-                ),
-                'timeout' => 15,
-            );
-
             $request_url = add_query_arg( array( 'pageSize' => 100 ), $url );
             if ( ! empty( $offset ) ) {
                 $request_url = add_query_arg( array( 'offset' => $offset ), $request_url );
             }
 
-            $response = wp_remote_get( esc_url_raw( $request_url ), $args );
+            $data = $this->request_json( $request_url, 15 );
 
-            if ( is_wp_error( $response ) ) {
-                return $response;
+            if ( is_wp_error( $data ) ) {
+                return $data;
             }
-
-            $body = wp_remote_retrieve_body( $response );
-            $data = json_decode( $body, true );
 
             if ( empty( $data['records'] ) ) {
                 break;
@@ -94,8 +86,10 @@ class WPCM_Airtable_API {
     }
 
     public function get_all_statuses() {
-        if ( empty( $this->token ) ) {
-            return new WP_Error( 'missing_token', __( 'Airtable token is not configured.', 'wpcredits-mentors' ) );
+        $config_error = $this->validate_configuration();
+
+        if ( is_wp_error( $config_error ) ) {
+            return $config_error;
         }
 
         $statuses = array();
@@ -103,13 +97,6 @@ class WPCM_Airtable_API {
         $url      = "https://api.airtable.com/v0/{$this->base_id}/{$this->table_id}";
 
         do {
-            $args = array(
-                'headers' => array(
-                    'Authorization' => "Bearer {$this->token}",
-                ),
-                'timeout' => 15,
-            );
-
             $request_url = add_query_arg(
                 array( 'pageSize' => 100, 'fields' => 'Status' ),
                 $url
@@ -118,14 +105,11 @@ class WPCM_Airtable_API {
                 $request_url = add_query_arg( array( 'offset' => $offset ), $request_url );
             }
 
-            $response = wp_remote_get( esc_url_raw( $request_url ), $args );
+            $data = $this->request_json( $request_url, 15 );
 
-            if ( is_wp_error( $response ) ) {
-                return $response;
+            if ( is_wp_error( $data ) ) {
+                return $data;
             }
-
-            $body = wp_remote_retrieve_body( $response );
-            $data = json_decode( $body, true );
 
             if ( empty( $data['records'] ) ) {
                 break;
@@ -160,36 +144,30 @@ class WPCM_Airtable_API {
     /**
      * Fetch table schema (field names and types) via the Airtable meta API.
      *
-     * @return array List of field definitions with 'name' and 'type'.
+     * @return array|WP_Error List of field definitions with 'name' and 'type'.
      */
     public function get_table_fields() {
-        if ( empty( $this->token ) ) {
-            return array();
+        $config_error = $this->validate_configuration();
+
+        if ( is_wp_error( $config_error ) ) {
+            return $config_error;
         }
 
-        $transient_key = 'wpcm_table_fields_' . md5( $this->table_id );
+        $transient_key = 'wpcm_table_fields_' . md5( $this->base_id . '|' . $this->table_id );
         $cached = get_transient( $transient_key );
         if ( false !== $cached ) {
             return $cached;
         }
 
         $url  = "https://api.airtable.com/v0/meta/bases/{$this->base_id}/tables";
-        $args = array(
-            'headers' => array(
-                'Authorization' => "Bearer {$this->token}",
-            ),
-            'timeout' => 30,
-        );
+        $body = $this->request_json( $url, 30 );
 
-        $response = wp_remote_get( esc_url_raw( $url ), $args );
-
-        if ( is_wp_error( $response ) ) {
-            return array();
+        if ( is_wp_error( $body ) ) {
+            return $body;
         }
 
-        $body = json_decode( wp_remote_retrieve_body( $response ), true );
-        if ( ! isset( $body['tables'] ) ) {
-            return array();
+        if ( ! isset( $body['tables'] ) || ! is_array( $body['tables'] ) ) {
+            return new WP_Error( 'airtable_schema_error', __( 'Airtable schema response did not include any tables.', 'wpcredits-mentors' ) );
         }
 
         $fields = array();
@@ -205,7 +183,116 @@ class WPCM_Airtable_API {
             }
         }
 
+        if ( empty( $fields ) ) {
+            return new WP_Error(
+                'airtable_table_not_found',
+                sprintf(
+                    __( 'The configured Airtable table %s was not found in the base schema.', 'wpcredits-mentors' ),
+                    $this->table_id
+                )
+            );
+        }
+
         set_transient( $transient_key, $fields, HOUR_IN_SECONDS );
         return $fields;
+    }
+
+    /**
+     * Validate the Airtable configuration required for requests.
+     *
+     * @return true|WP_Error
+     */
+    private function validate_configuration() {
+        if ( empty( $this->token ) ) {
+            return new WP_Error( 'missing_token', __( 'Airtable token is not configured.', 'wpcredits-mentors' ) );
+        }
+
+        if ( empty( $this->base_id ) ) {
+            return new WP_Error( 'missing_base_id', __( 'Airtable Base ID is not configured.', 'wpcredits-mentors' ) );
+        }
+
+        if ( empty( $this->table_id ) ) {
+            return new WP_Error( 'missing_table_id', __( 'Airtable Table ID is not configured.', 'wpcredits-mentors' ) );
+        }
+
+        return true;
+    }
+
+    /**
+     * Perform an Airtable GET request and decode JSON.
+     *
+     * @param string $url Request URL.
+     * @param int    $timeout Request timeout in seconds.
+     * @return array|WP_Error
+     */
+    private function request_json( $url, $timeout ) {
+        $response = wp_remote_get(
+            esc_url_raw( $url ),
+            array(
+                'headers' => array(
+                    'Authorization' => "Bearer {$this->token}",
+                ),
+                'timeout' => $timeout,
+            )
+        );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        $code = wp_remote_retrieve_response_code( $response );
+        $body = wp_remote_retrieve_body( $response );
+        $data = json_decode( $body, true );
+
+        if ( $code < 200 || $code >= 300 ) {
+            return new WP_Error(
+                'airtable_http_error',
+                sprintf(
+                    __( 'Airtable request failed with HTTP %1$d: %2$s', 'wpcredits-mentors' ),
+                    $code,
+                    $this->get_error_message_from_response( $data )
+                )
+            );
+        }
+
+        if ( ! is_array( $data ) ) {
+            return new WP_Error( 'airtable_invalid_json', __( 'Airtable returned an invalid JSON response.', 'wpcredits-mentors' ) );
+        }
+
+        if ( isset( $data['error'] ) ) {
+            return new WP_Error(
+                'airtable_api_error',
+                sprintf(
+                    __( 'Airtable returned an API error: %s', 'wpcredits-mentors' ),
+                    $this->get_error_message_from_response( $data )
+                )
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Extract a readable Airtable error message from the response body.
+     *
+     * @param array $data Decoded response body.
+     * @return string
+     */
+    private function get_error_message_from_response( $data ) {
+        if ( isset( $data['error'] ) && is_string( $data['error'] ) ) {
+            return $data['error'];
+        }
+
+        if ( isset( $data['error'] ) && is_array( $data['error'] ) ) {
+            if ( ! empty( $data['error']['message'] ) ) {
+                return $data['error']['message'];
+            }
+
+            if ( ! empty( $data['error']['type'] ) ) {
+                return $data['error']['type'];
+            }
+        }
+
+        return __( 'Unknown Airtable error.', 'wpcredits-mentors' );
     }
 }

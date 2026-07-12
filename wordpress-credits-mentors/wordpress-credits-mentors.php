@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WordPress Credits Mentors
  * Description: Display mentors from Airtable on the WordPress Credits handbook page. Use shortcode [wpcredits_mentors].
- * Version:     1.0.0
+ * Version:     0.1.0
  * Author:      WordPress Credits Team
  * Text Domain: wpcredits-mentors
  *
@@ -15,14 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WPCM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPCM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'WPCM_VERSION', '1.0.0' );
+define( 'WPCM_VERSION', '0.1.0' );
 
-if ( ! defined( 'WPCM_AIRTABLE_BASE_ID' ) ) {
-    define( 'WPCM_AIRTABLE_BASE_ID', 'appXXXXXXXXXXXXXX' );
-}
-if ( ! defined( 'WPCM_AIRTABLE_TABLE_ID' ) ) {
-    define( 'WPCM_AIRTABLE_TABLE_ID', 'tblXXXXXXXXXXXXXX' );
-}
 if ( ! defined( 'WPCM_CACHE_TTL' ) ) {
     define( 'WPCM_CACHE_TTL', HOUR_IN_SECONDS );
 }

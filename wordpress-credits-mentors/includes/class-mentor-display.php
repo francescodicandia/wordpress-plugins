@@ -59,6 +59,15 @@ class WPCM_Mentor_Display {
 
         if ( 'table' === $view ) {
             $fields = $this->parse_fields( $atts['fields'] );
+
+            if ( is_wp_error( $fields ) ) {
+                return '<p>' . esc_html( $fields->get_error_message() ) . '</p>';
+            }
+
+            if ( empty( $fields ) ) {
+                return '<p>' . esc_html__( 'Table view is unavailable until Airtable schema access is configured correctly.', 'wpcredits-mentors' ) . '</p>';
+            }
+
             return $this->render_table( $mentors, $fields );
         }
 
@@ -67,6 +76,10 @@ class WPCM_Mentor_Display {
 
     private function parse_fields( $raw ) {
         $valid = $this->get_valid_field_names_cached();
+
+        if ( is_wp_error( $valid ) ) {
+            return $valid;
+        }
 
         if ( empty( $raw ) ) {
             $defaults = array();
@@ -89,7 +102,11 @@ class WPCM_Mentor_Display {
             }
         }
 
-        return ! empty( $resolved ) ? $resolved : $valid;
+        if ( ! empty( $resolved ) ) {
+            return array_values( array_unique( $resolved ) );
+        }
+
+        return new WP_Error( 'wpcm_invalid_fields', __( 'No valid Airtable fields were requested for table view.', 'wpcredits-mentors' ) );
     }
 
     /**
@@ -104,6 +121,15 @@ class WPCM_Mentor_Display {
 
         $api   = new WPCM_Airtable_API();
         $fields = $api->get_table_fields();
+
+        if ( is_wp_error( $fields ) ) {
+            return $fields;
+        }
+
+        if ( ! is_array( $fields ) ) {
+            return new WP_Error( 'wpcm_invalid_schema_fields', __( 'Airtable schema fields could not be loaded.', 'wpcredits-mentors' ) );
+        }
+
         $names  = wp_list_pluck( $fields, 'name' );
 
         set_transient( $cache_key, $names, HOUR_IN_SECONDS );
