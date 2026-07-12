@@ -31,11 +31,8 @@ Le immagini sotto sono preview illustrative del plugin.
 3. Vai in **Impostazioni → Credits Mentors** e configura:
    - **Airtable API Token** — Personal Access Token con accesso in lettura alla base
    - **Allowed Statuses** — Status records da includere (default: `Active`)
-4. Definisci le costanti nel `wp-config.php`:
-   ```php
-   define( 'WPCM_AIRTABLE_BASE_ID', 'appXXXXXXXXXXXXXX' );
-   define( 'WPCM_AIRTABLE_TABLE_ID', 'tblXXXXXXXXXXXXXX' );
-   ```
+
+Per l'installazione standard non serve aggiungere nulla a `wp-config.php`: il plugin usa gia' i valori di base e tabella previsti per questo progetto.
 
 ## Shortcode
 
