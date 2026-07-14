@@ -163,7 +163,7 @@ class ATVT_Airtable_API {
             );
         }
 
-        set_transient( $transient_key, $fields, HOUR_IN_SECONDS );
+        set_transient( $transient_key, $fields, atvt_get_cache_ttl() );
         return $fields;
     }
 

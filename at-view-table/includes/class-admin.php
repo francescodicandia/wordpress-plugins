@@ -57,6 +57,14 @@ class ATVT_Admin {
                 'sanitize_callback' => array( $this, 'sanitize_default_limit' ),
             )
         );
+
+        register_setting(
+            'atvt_settings',
+            'atvt_cache_ttl',
+            array(
+                'sanitize_callback' => array( $this, 'sanitize_cache_ttl' ),
+            )
+        );
     }
 
     public function sanitize_airtable_base_id( $value ) {
@@ -77,6 +85,12 @@ class ATVT_Admin {
         return $limit;
     }
 
+    public function sanitize_cache_ttl( $value ) {
+        $this->clear_plugin_caches();
+
+        return max( 1, intval( $value ) );
+    }
+
     private function clear_plugin_caches() {
         delete_transient( 'atvt_valid_field_names' );
     }
@@ -95,6 +109,7 @@ class ATVT_Admin {
         $base_id       = get_option( 'atvt_airtable_base_id', '' );
         $token         = get_option( 'atvt_airtable_token' );
         $default_limit = max( 1, intval( get_option( 'atvt_default_limit', 25 ) ) );
+        $cache_ttl     = max( 1, intval( get_option( 'atvt_cache_ttl', 60 ) ) );
         ?>
         <div class="wrap">
             <h1><?php echo esc_html__( 'AT View Table Settings', 'at-view-table' ); ?></h1>
@@ -167,6 +182,25 @@ class ATVT_Admin {
                             />
                             <p class="description">
                                 <?php echo esc_html__( 'Default maximum number of rows to show when the shortcode does not define a limit. Default: 25.', 'at-view-table' ); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="atvt_cache_ttl"><?php echo esc_html__( 'Cache TTL (minutes)', 'at-view-table' ); ?></label>
+                        </th>
+                        <td>
+                            <input
+                                type="number"
+                                min="1"
+                                step="1"
+                                id="atvt_cache_ttl"
+                                name="atvt_cache_ttl"
+                                value="<?php echo esc_attr( $cache_ttl ); ?>"
+                                class="small-text"
+                            />
+                            <p class="description">
+                                <?php echo esc_html__( 'How long to cache Airtable API responses locally (in minutes). Lower values show fresher data but increase API calls. Default: 60.', 'at-view-table' ); ?>
                             </p>
                         </td>
                     </tr>
@@ -326,8 +360,14 @@ class ATVT_Admin {
                 <li>
                     <strong><code>limit</code></strong>
                     &mdash;
-                    <?php echo esc_html__( 'Optional. Maximum number of rows to show. If omitted, the global default limit is used.', 'at-view-table' ); ?>
-                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="25"]</code>
+                    <?php echo esc_html__( 'Optional. Maximum number of rows to fetch from Airtable. If omitted, the global default limit is used.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="100"]</code>
+                </li>
+                <li>
+                    <strong><code>page_size</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Optional. Rows per page for client-side pagination. If omitted, all rows are shown on one page.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="100" page_size="25"]</code>
                 </li>
             </ul>
         </div>
