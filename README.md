@@ -1,16 +1,16 @@
 # WordPress Plugins
 
-Monorepo per plugin WordPress sviluppati per il progetto WordPress Credits.
+Monorepo for WordPress plugins developed within the WordPress Credits project.
 
 ## Plugin
 
-- [**WordPress Credits Mentors**](wordpress-credits-mentors/) — Visualizza i mentor del programma WordPress Credits tramite shortcode, con dati caricati da Airtable.
+- [**AT View Table**](at-view-table/) — Render Airtable table data in a WordPress table view via explicit shortcode. Includes table inspection, filtering, sorting, and limit controls from the admin area.
 
-## Struttura
+## Structure
 
-- `wordpress-credits-mentors/`: plugin attuale per la directory mentors
-- `wordpress-*/`: cartelle riservate ai prossimi plugin del monorepo
+- `at-view-table/`: generic Airtable-to-WordPress table viewer utility plugin
+- `wordpress-*/`: directories reserved for future monorepo plugins
 
-## Licenza
+## License
 
-Questo repository usa **GPL-2.0-or-later**, compatibile con l'ecosistema WordPress.
+This repository uses **GPL-2.0-or-later**, compatible with the WordPress ecosystem.
