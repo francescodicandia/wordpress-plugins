@@ -1,6 +1,6 @@
 <?php
 /**
- * Airtable API wrapper for fetching mentor records.
+ * Airtable API wrapper for fetching generic Airtable records.
  *
  * @package ATViewTable
  */
@@ -21,14 +21,14 @@ class ATVT_Airtable_API {
         $this->table_id = get_option( 'atvt_airtable_table_id', '' );
     }
 
-    public function fetch_mentors() {
+    public function fetch_records() {
         $config_error = $this->validate_configuration();
 
         if ( is_wp_error( $config_error ) ) {
             return $config_error;
         }
 
-        $mentors = array();
+        $records = array();
         $offset  = '';
         $url     = "https://api.airtable.com/v0/{$this->base_id}/{$this->table_id}";
 
@@ -49,32 +49,15 @@ class ATVT_Airtable_API {
             }
 
             foreach ( $data['records'] as $record ) {
-                $fields = $record['fields'];
-
-                $status = isset( $fields['Status'] ) ? sanitize_text_field( $fields['Status'] ) : '';
-
-                $valid_statuses = get_option( 'atvt_mentor_statuses', 'Active' );
-                $valid_statuses = array_map( 'trim', explode( ',', $valid_statuses ) );
-
-                if ( ! in_array( $status, $valid_statuses, true ) ) {
-                    continue;
-                }
-
+                $fields = isset( $record['fields'] ) && is_array( $record['fields'] ) ? $record['fields'] : array();
                 $sanitized = array();
                 foreach ( $fields as $key => $value ) {
                     $sanitized[ sanitize_text_field( $key ) ] = $this->sanitize_field_value( $value );
                 }
 
-                $mentors[] = array(
-                    'raw_fields'             => $sanitized,
-                    'id'                     => sanitize_text_field( $record['id'] ),
-                    'full_name'              => isset( $fields['Full Name'] ) ? sanitize_text_field( $fields['Full Name'] ) : '',
-                    'wordpress_profile'      => isset( $fields['WordPress profile'] ) ? esc_url_raw( $fields['WordPress profile'] ) : '',
-                    'email'                  => isset( $fields['Email'] ) ? sanitize_email( $fields['Email'] ) : '',
-                    'sponsored'              => isset( $fields['Sponsored'] ) && 'Yes' === $fields['Sponsored'],
-                    'sponsor_company'        => isset( $fields['Sponsor company'] ) ? sanitize_text_field( $fields['Sponsor company'] ) : '',
-                    'expertise'              => isset( $fields['Contribution Area - Expertise'] ) ? array_map( 'sanitize_text_field', (array) $fields['Contribution Area - Expertise'] ) : array(),
-                    'available_hours'        => isset( $fields['Available hours per week'] ) ? intval( $fields['Available hours per week'] ) : 0,
+                $records[] = array(
+                    'id'     => sanitize_text_field( $record['id'] ),
+                    'fields' => $sanitized,
                 );
             }
 
@@ -82,7 +65,7 @@ class ATVT_Airtable_API {
 
         } while ( ! empty( $offset ) );
 
-        return $mentors;
+        return $records;
     }
 
     public function get_all_statuses() {

@@ -1,113 +1,3 @@
-.atvt-grid {
-    display: grid;
-    grid-template-columns: repeat(var(--atvt-columns, 3), 1fr);
-    gap: 30px;
-    margin: 2em 0;
-}
-
-.atvt-card {
-    background: #f6f7f7;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: box-shadow 0.2s ease;
-}
-
-.atvt-card:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.atvt-card-inner {
-    padding: 28px 20px 24px;
-    text-align: center;
-}
-
-.atvt-avatar {
-    margin: 0 auto 16px;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-.atvt-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-}
-
-.atvt-avatar-placeholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: #dcdcde;
-    color: #3c434a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.4em;
-    font-weight: 600;
-}
-
-.atvt-name {
-    font-size: 1.1em;
-    margin: 0 0 12px;
-    line-height: 1.3;
-}
-
-.atvt-name a {
-    text-decoration: none;
-    color: #1d2327;
-}
-
-.atvt-name a:hover {
-    color: #2271b1;
-}
-
-.atvt-expertise {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 12px;
-}
-
-.atvt-tag {
-    display: inline-block;
-    background: #e8f0fe;
-    color: #1967d2;
-    font-size: 0.8em;
-    padding: 3px 10px;
-    border-radius: 12px;
-}
-
-.atvt-sponsored {
-    margin-top: 8px;
-}
-
-.atvt-sponsored-label {
-    display: inline-block;
-    font-size: 0.8em;
-    color: #555;
-    background: #f0f0f1;
-    padding: 2px 10px;
-    border-radius: 10px;
-}
-
-@media (max-width: 782px) {
-    .atvt-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .atvt-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 .atvt-table-wrap {
     overflow-x: auto;
     margin: 2em 0;
@@ -116,7 +6,7 @@
 .atvt-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9em;
+    font-size: 0.95em;
 }
 
 .atvt-table th,
@@ -124,7 +14,7 @@
     padding: 10px 12px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 .atvt-table thead th {
@@ -137,76 +27,19 @@
     background: #f6f7f7;
 }
 
-.atvt-table-avatar {
-    width: 50px;
-}
-
-.atvt-table-avatar img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: block;
-}
-
-.atvt-table-name-cell .atvt-table-avatar {
+.atvt-tag {
     display: inline-block;
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
-    margin-right: 8px;
-}
-
-.atvt-table-name-cell .atvt-table-avatar img {
-    width: 32px;
-    height: 32px;
-}
-
-.atvt-table-name-cell a {
-    vertical-align: middle;
-    font-weight: 500;
-    text-decoration: none;
-    color: #1d2327;
-}
-
-.atvt-table-name-cell a:hover {
-    color: #2271b1;
-}
-
-.atvt-table-avatar-placeholder {
-    width: 40px !important;
-    height: 40px !important;
-    font-size: 1em !important;
-}
-
-.atvt-table-name a {
-    text-decoration: none;
-    color: #1d2327;
-    font-weight: 500;
-}
-
-.atvt-table-name a:hover {
-    color: #2271b1;
-}
-
-.atvt-table-email {
-    color: #555;
-}
-
-.atvt-table-expertise .atvt-tag {
-    font-size: 0.78em;
-}
-
-.atvt-table-hours {
-    text-align: center;
-    white-space: nowrap;
+    background: #e8f0fe;
+    color: #1967d2;
+    font-size: 0.8em;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-bottom: 4px;
 }
 
 .atvt-table-na {
     color: #bbb;
-}
-
-.atvt-table-sponsor {
-    white-space: nowrap;
 }
 
 @media (max-width: 600px) {
@@ -220,33 +53,18 @@
         border-bottom: 2px solid #ddd;
     }
 
-        .atvt-table tbody td {
+    .atvt-table tbody td {
         display: flex;
         padding: 4px 8px;
         border: none;
         gap: 8px;
-        align-items: center;
-    }
-
-    .atvt-table tbody td .atvt-table-avatar {
-        width: 24px;
-        height: 24px;
-        flex-shrink: 0;
-    }
-
-    .atvt-table tbody td .atvt-table-avatar img {
-        width: 24px;
-        height: 24px;
+        align-items: flex-start;
     }
 
     .atvt-table tbody td::before {
         content: attr(data-label);
         font-weight: 600;
-        min-width: 80px;
+        min-width: 100px;
         flex-shrink: 0;
-    }
-
-    .atvt-table-avatar {
-        justify-content: center;
     }
 }

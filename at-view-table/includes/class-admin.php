@@ -382,24 +382,12 @@ class ATVT_Admin {
             <p><code>[at_view_table]</code></p>
             <p><?php echo esc_html__( 'Optional parameters:', 'at-view-table' ); ?></p>
             <ul style="list-style: disc; padding-left: 24px;">
-                    <li>
-                        <strong><code>columns</code></strong>
-                        &mdash;
-                        <?php echo esc_html__( 'Number of columns in grid view (1 to 4). Default: 3.', 'at-view-table' ); ?>
-                        <br /><code>[at_view_table columns=2]</code>
-                    </li>
-                    <li>
-                        <strong><code>view</code></strong>
-                        &mdash;
-                        <?php echo esc_html__( 'Display layout: grid (cards) or table (one row per row). Default: grid.', 'at-view-table' ); ?>
-                        <br /><code>[at_view_table view=table]</code>
-                    </li>
-                    <li>
-                        <strong><code>fields</code></strong>
-                        &mdash;
-                        <?php echo esc_html__( 'Columns to show in table view. Comma-separated list of Airtable field names (see table above).', 'at-view-table' ); ?>
-                        <br /><code>[at_view_table view=table fields="Full Name,Email,Sponsor company"]</code>
-                    </li>
+                <li>
+                    <strong><code>fields</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Columns to show in the table. Comma-separated list of Airtable field names (see table above).', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table fields="Name,Email,Status"]</code>
+                </li>
             </ul>
         </div>
         <?php
@@ -415,33 +403,16 @@ function atvt_ajax_test_airtable() {
     }
 
     $api = new ATVT_Airtable_API();
-    $result = $api->fetch_mentors();
+    $result = $api->fetch_records();
 
     if ( is_wp_error( $result ) ) {
         wp_send_json_error( $result->get_error_message() );
     }
 
-    $count = count( $result );
-
-    if ( 0 === $count ) {
-        $allowed_statuses = get_option( 'atvt_mentor_statuses', 'Active' );
-        $available_statuses = $api->get_all_statuses();
-
-        if ( is_array( $available_statuses ) && ! empty( $available_statuses ) ) {
-            wp_send_json_success(
-                sprintf(
-                    __( 'Connection successful, but 0 rows matched Allowed Statuses (%1$s). Available statuses in this table: %2$s', 'at-view-table' ),
-                    $allowed_statuses,
-                    implode( ', ', $available_statuses )
-                )
-            );
-        }
-    }
-
     wp_send_json_success(
         sprintf(
             __( 'Connection successful. %d rows found.', 'at-view-table' ),
-            $count
+            count( $result )
         )
     );
 }
