@@ -122,7 +122,7 @@ class ATVT_Airtable_API {
         }
 
         $resolved_table_id = $this->get_resolved_table_id( $table_id );
-        $transient_key     = 'atvt_table_fields_' . md5( $this->base_id . '|' . $resolved_table_id );
+        $transient_key     = 'atvt_table_fields_' . atvt_get_cache_salt() . '_' . md5( $this->base_id . '|' . $resolved_table_id );
         $cached = get_transient( $transient_key );
         if ( false !== $cached ) {
             return $cached;

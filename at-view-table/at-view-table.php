@@ -43,6 +43,24 @@ function atvt_get_cache_ttl() {
     return ATVT_CACHE_TTL;
 }
 
+/**
+ * Get the current cache salt for transient key generation.
+ *
+ * Bumping this value invalidates all cached Airtable data at once.
+ *
+ * @return int Cache salt value.
+ */
+function atvt_get_cache_salt() {
+    $salt = get_option( 'atvt_cache_salt' );
+
+    if ( false === $salt ) {
+        $salt = 1;
+        add_option( 'atvt_cache_salt', $salt, '', 'no' );
+    }
+
+    return (int) $salt;
+}
+
 require_once ATVT_PLUGIN_DIR . 'includes/class-airtable-api.php';
 require_once ATVT_PLUGIN_DIR . 'includes/class-table-display.php';
 require_once ATVT_PLUGIN_DIR . 'includes/class-admin.php';

@@ -98,7 +98,7 @@ class ATVT_Admin {
     }
 
     private function clear_plugin_caches() {
-        delete_transient( 'atvt_valid_field_names' );
+        update_option( 'atvt_cache_salt', time() );
     }
 
     public function add_settings_link( $links ) {

@@ -124,7 +124,7 @@ class ATVT_Table_Display {
      * Fetch valid Airtable field names, cached from the schema API.
      */
     private function get_valid_field_names_cached( $table_id ) {
-        $cache_key = 'atvt_valid_field_names_' . md5( $table_id );
+        $cache_key = 'atvt_valid_field_names_' . atvt_get_cache_salt() . '_' . md5( $table_id );
         $cached    = get_transient( $cache_key );
         if ( false !== $cached ) {
             return $cached;
@@ -204,7 +204,7 @@ class ATVT_Table_Display {
     }
 
     private function get_records_cached( $query_args ) {
-        $cache_key = 'atvt_records_' . md5( wp_json_encode( $query_args ) );
+        $cache_key = 'atvt_records_' . atvt_get_cache_salt() . '_' . md5( wp_json_encode( $query_args ) );
         $records   = get_transient( $cache_key );
 
         if ( false !== $records ) {
