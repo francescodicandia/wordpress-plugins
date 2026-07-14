@@ -156,6 +156,7 @@ class ATVT_Airtable_API {
             return new WP_Error(
                 'airtable_table_not_found',
                 sprintf(
+                    /* translators: %s: Airtable table ID. */
                     __( 'The configured Airtable table %s was not found in the base schema.', 'at-view-table' ),
                     $resolved_table_id
                 )
@@ -275,6 +276,7 @@ class ATVT_Airtable_API {
             return new WP_Error(
                 'airtable_http_error',
                 sprintf(
+                    /* translators: 1: HTTP status code, 2: Airtable error message. */
                     __( 'Airtable request failed with HTTP %1$d: %2$s', 'at-view-table' ),
                     $code,
                     $this->get_error_message_from_response( $data )
@@ -290,6 +292,7 @@ class ATVT_Airtable_API {
             return new WP_Error(
                 'airtable_api_error',
                 sprintf(
+                    /* translators: %s: Airtable API error message. */
                     __( 'Airtable returned an API error: %s', 'at-view-table' ),
                     $this->get_error_message_from_response( $data )
                 )

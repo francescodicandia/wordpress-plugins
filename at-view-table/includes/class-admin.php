@@ -352,6 +352,7 @@ function atvt_ajax_test_airtable() {
 
     wp_send_json_success(
         sprintf(
+            /* translators: %d: number of Airtable tables returned by the base schema. */
             __( 'Connection successful. The Airtable base is reachable and returned %d table definitions.', 'at-view-table' ),
             isset( $result['tables'] ) && is_array( $result['tables'] ) ? count( $result['tables'] ) : 0
         )
