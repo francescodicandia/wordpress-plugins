@@ -74,6 +74,12 @@ class ATVT_Admin {
     }
 
     public function sanitize_airtable_token( $value ) {
+        $placeholder = '********************';
+
+        if ( $placeholder === $value ) {
+            return get_option( 'atvt_airtable_token' );
+        }
+
         $this->clear_plugin_caches();
 
         return sanitize_text_field( $value );
@@ -108,6 +114,7 @@ class ATVT_Admin {
 
         $base_id       = get_option( 'atvt_airtable_base_id', '' );
         $token         = get_option( 'atvt_airtable_token' );
+        $token_display = $token ? '********************' : '';
         $default_limit = max( 1, intval( get_option( 'atvt_default_limit', 25 ) ) );
         $cache_ttl     = max( 1, intval( get_option( 'atvt_cache_ttl', 60 ) ) );
         ?>
@@ -151,7 +158,7 @@ class ATVT_Admin {
                                 type="password"
                                 id="atvt_airtable_token"
                                 name="atvt_airtable_token"
-                                value="<?php echo esc_attr( $token ); ?>"
+                                value="<?php echo esc_attr( $token_display ); ?>"
                                 class="regular-text"
                             />
                             <p class="description">
