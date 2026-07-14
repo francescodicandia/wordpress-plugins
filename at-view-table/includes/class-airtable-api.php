@@ -13,12 +13,10 @@ class ATVT_Airtable_API {
 
     private $token;
     private $base_id;
-    private $table_id;
 
     public function __construct() {
         $this->token    = get_option( 'atvt_airtable_token', '' );
         $this->base_id  = get_option( 'atvt_airtable_base_id', '' );
-        $this->table_id = get_option( 'atvt_airtable_table_id', '' );
     }
 
     public function fetch_records( $args = array() ) {
@@ -29,7 +27,7 @@ class ATVT_Airtable_API {
             return $config_error;
         }
 
-        $resolved_table_id = $this->get_resolved_table_id( $table_id );
+        $resolved_table_id = $table_id;
         $limit             = isset( $args['limit'] ) ? max( 1, intval( $args['limit'] ) ) : 0;
         $records = array();
         $offset  = '';
@@ -121,7 +119,7 @@ class ATVT_Airtable_API {
             return $config_error;
         }
 
-        $resolved_table_id = $this->get_resolved_table_id( $table_id );
+        $resolved_table_id = $table_id;
         $transient_key     = 'atvt_table_fields_' . atvt_get_cache_salt() . '_' . md5( $this->base_id . '|' . $resolved_table_id );
         $cached = get_transient( $transient_key );
         if ( false !== $cached ) {
@@ -181,15 +179,11 @@ class ATVT_Airtable_API {
             return new WP_Error( 'missing_base_id', __( 'Airtable Base ID is not configured.', 'at-view-table' ) );
         }
 
-        if ( empty( $this->get_resolved_table_id( $table_id ) ) ) {
+        if ( empty( $table_id ) ) {
             return new WP_Error( 'missing_table_id', __( 'Airtable Table ID is not configured.', 'at-view-table' ) );
         }
 
         return true;
-    }
-
-    private function get_resolved_table_id( $table_id = '' ) {
-        return ! empty( $table_id ) ? $table_id : $this->table_id;
     }
 
     private function filter_records( $records, $args ) {
