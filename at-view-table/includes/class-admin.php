@@ -17,7 +17,7 @@ class WPCM_Admin {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_filter(
-            'plugin_action_links_' . plugin_basename( WPCM_PLUGIN_DIR . 'wordpress-credits-mentors.php' ),
+            'plugin_action_links_' . plugin_basename( WPCM_PLUGIN_DIR . 'at-view-table.php' ),
             array( $this, 'add_settings_link' )
         );
     }

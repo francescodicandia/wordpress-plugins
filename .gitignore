@@ -6,9 +6,11 @@
 !/README.md
 !/LICENSE
 
-# Keep WordPress plugin directories.
+# Keep plugin directories.
 !/wordpress-*/
 !/wordpress-*/**
+!/at-view-table/
+!/at-view-table/**
 
 # Local/environment files.
 .env

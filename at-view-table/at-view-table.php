@@ -1,10 +1,12 @@
 <?php
 /**
- * Plugin Name: WordPress Credits Mentors
- * Description: Display mentors from Airtable on the WordPress Credits handbook page. Use shortcode [wpcredits_mentors].
+ * Plugin Name: AT View Table
+ * Description: Display Airtable table data in a WordPress table view.
  * Version:     0.1.0
  * Author:      WordPress Credits Team
- * Text Domain: wpcredits-mentors
+ * Text Domain: at-view-table
+ * License:     GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @package WordPressCredits
  */
@@ -36,7 +38,7 @@ add_action( 'plugins_loaded', 'wpcm_init' );
 
 function wpcm_enqueue_styles() {
     wp_enqueue_style(
-        'wpcredits-mentors',
+        'at-view-table',
         WPCM_PLUGIN_URL . 'assets/css/mentors.css',
         array(),
         WPCM_VERSION
