@@ -78,47 +78,21 @@ class ATVT_Airtable_API {
         return $records;
     }
 
-    public function get_all_statuses() {
-        $config_error = $this->validate_configuration();
-
-        if ( is_wp_error( $config_error ) ) {
-            return $config_error;
+    /**
+     * Validate the Airtable connection using base ID and token only.
+     *
+     * @return array|WP_Error
+     */
+    public function test_connection() {
+        if ( empty( $this->token ) ) {
+            return new WP_Error( 'missing_token', __( 'Airtable token is not configured.', 'at-view-table' ) );
         }
 
-        $statuses = array();
-        $offset   = '';
-        $url      = "https://api.airtable.com/v0/{$this->base_id}/{$this->table_id}";
+        if ( empty( $this->base_id ) ) {
+            return new WP_Error( 'missing_base_id', __( 'Airtable Base ID is not configured.', 'at-view-table' ) );
+        }
 
-        do {
-            $request_url = add_query_arg(
-                array( 'pageSize' => 100, 'fields' => 'Status' ),
-                $url
-            );
-            if ( ! empty( $offset ) ) {
-                $request_url = add_query_arg( array( 'offset' => $offset ), $request_url );
-            }
-
-            $data = $this->request_json( $request_url, 15 );
-
-            if ( is_wp_error( $data ) ) {
-                return $data;
-            }
-
-            if ( empty( $data['records'] ) ) {
-                break;
-            }
-
-            foreach ( $data['records'] as $record ) {
-                if ( isset( $record['fields']['Status'] ) ) {
-                    $statuses[ sanitize_text_field( $record['fields']['Status'] ) ] = true;
-                }
-            }
-
-            $offset = isset( $data['offset'] ) ? $data['offset'] : '';
-
-        } while ( ! empty( $offset ) );
-
-        return array_keys( $statuses );
+        return $this->request_json( "https://api.airtable.com/v0/meta/bases/{$this->base_id}/tables", 30 );
     }
 
     /**
