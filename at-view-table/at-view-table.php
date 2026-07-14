@@ -93,3 +93,26 @@ function atvt_enqueue_assets() {
     );
 }
 add_action( 'wp_enqueue_scripts', 'atvt_enqueue_assets' );
+
+/**
+ * Clean up transients on deactivation.
+ */
+function atvt_cleanup_transients() {
+    global $wpdb;
+
+    $transient_keys = $wpdb->get_col(
+        $wpdb->prepare(
+            "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s
+             UNION
+             SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+            $wpdb->esc_like( '_transient_atvt_' ) . '%',
+            $wpdb->esc_like( '_transient_timeout_atvt_' ) . '%'
+        )
+    );
+
+    foreach ( $transient_keys as $option_name ) {
+        $key = str_replace( '_transient_', '', $option_name );
+        delete_transient( $key );
+    }
+}
+register_deactivation_hook( __FILE__, 'atvt_cleanup_transients' );
