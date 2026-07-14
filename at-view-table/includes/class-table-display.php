@@ -24,6 +24,7 @@ class ATVT_Table_Display {
             'sort_field'     => '',
             'sort_direction' => '',
             'limit'          => '',
+            'page_size'      => '',
         ), $atts, 'at_view_table' );
 
         $query_args = $this->normalize_shortcode_args( $atts );
@@ -50,7 +51,7 @@ class ATVT_Table_Display {
             return '<p>' . esc_html__( 'No Airtable rows found.', 'at-view-table' ) . '</p>';
         }
 
-        return $this->render_table( $records, $fields );
+        return $this->render_table( $records, $fields, $query_args['page_size'] );
     }
 
     private function normalize_shortcode_args( $atts ) {
@@ -82,6 +83,9 @@ class ATVT_Table_Display {
         $limit = '' === $atts['limit'] ? intval( get_option( 'atvt_default_limit', 25 ) ) : intval( $atts['limit'] );
         $limit = max( 1, $limit );
 
+        $page_size = '' === $atts['page_size'] ? $limit : intval( $atts['page_size'] );
+        $page_size = max( 1, $page_size );
+
         return array(
             'table_id'       => $table_id,
             'fields'         => $fields,
@@ -90,6 +94,7 @@ class ATVT_Table_Display {
             'sort_field'     => sanitize_text_field( $atts['sort_field'] ),
             'sort_direction' => '' === $sort_direction ? 'asc' : $sort_direction,
             'limit'          => $limit,
+            'page_size'      => $page_size,
         );
     }
 
@@ -142,10 +147,14 @@ class ATVT_Table_Display {
         return $names;
     }
 
-    private function render_table( $records, $fields ) {
+    private function render_table( $records, $fields, $page_size ) {
+        $total_rows  = count( $records );
+        $total_pages = $total_rows > 0 ? max( 1, (int) ceil( $total_rows / $page_size ) ) : 1;
+        $show_pagination = $total_pages > 1;
+
         ob_start();
         ?>
-        <div class="atvt-table-wrap">
+        <div class="atvt-table-wrap" data-page-size="<?php echo esc_attr( $page_size ); ?>">
             <table class="atvt-table">
                 <thead>
                     <tr>
@@ -155,7 +164,7 @@ class ATVT_Table_Display {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ( $records as $record ) : ?>
+                    <?php foreach ( $records as $i => $record ) : ?>
                         <tr>
                             <?php foreach ( $fields as $field_name ) : ?>
                                 <td data-label="<?php echo esc_attr( $field_name ); ?>">
@@ -166,6 +175,13 @@ class ATVT_Table_Display {
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <?php if ( $show_pagination ) : ?>
+            <div class="atvt-pagination">
+                <button class="atvt-prev" disabled>&laquo; <?php esc_html_e( 'Previous', 'at-view-table' ); ?></button>
+                <span class="atvt-page-info"><?php esc_html_e( 'Page', 'at-view-table' ); ?> <span class="atvt-current-page">1</span> <?php esc_html_e( 'of', 'at-view-table' ); ?> <span class="atvt-total-pages"><?php echo esc_html( $total_pages ); ?></span></span>
+                <button class="atvt-next"><?php esc_html_e( 'Next', 'at-view-table' ); ?> &raquo;</button>
+            </div>
+            <?php endif; ?>
         </div>
         <?php
         return ob_get_clean();
