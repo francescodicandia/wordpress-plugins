@@ -2,14 +2,14 @@
 /**
  * Admin settings page for the plugin.
  *
- * @package WordPressCredits
+ * @package ATViewTable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class WPCM_Admin {
+class ATVT_Admin {
 
     private $capability = 'activate_plugins';
 
@@ -17,7 +17,7 @@ class WPCM_Admin {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
         add_filter(
-            'plugin_action_links_' . plugin_basename( WPCM_PLUGIN_DIR . 'at-view-table.php' ),
+            'plugin_action_links_' . plugin_basename( ATVT_PLUGIN_DIR . 'at-view-table.php' ),
             array( $this, 'add_settings_link' )
         );
     }
@@ -25,42 +25,42 @@ class WPCM_Admin {
     public function add_admin_menu() {
         add_submenu_page(
             'options-general.php',
-            __( 'WordPress Credits Mentors', 'wpcredits-mentors' ),
-            __( 'Credits Mentors', 'wpcredits-mentors' ),
+            __( 'AT View Table', 'at-view-table' ),
+            __( 'AT View Table', 'at-view-table' ),
             $this->capability,
-            'wpcredits-mentors',
+            'at-view-table',
             array( $this, 'render_settings_page' )
         );
     }
 
     public function register_settings() {
         register_setting(
-            'wpcm_settings',
-            'wpcm_airtable_base_id',
+            'atvt_settings',
+            'atvt_airtable_base_id',
             array(
                 'sanitize_callback' => array( $this, 'sanitize_airtable_base_id' ),
             )
         );
 
         register_setting(
-            'wpcm_settings',
-            'wpcm_airtable_table_id',
+            'atvt_settings',
+            'atvt_airtable_table_id',
             array(
                 'sanitize_callback' => array( $this, 'sanitize_airtable_table_id' ),
             )
         );
 
         register_setting(
-            'wpcm_settings',
-            'wpcm_airtable_token',
+            'atvt_settings',
+            'atvt_airtable_token',
             array(
                 'sanitize_callback' => array( $this, 'sanitize_airtable_token' ),
             )
         );
 
         register_setting(
-            'wpcm_settings',
-            'wpcm_mentor_statuses',
+            'atvt_settings',
+            'atvt_mentor_statuses',
             array(
                 'sanitize_callback' => array( $this, 'sanitize_mentor_statuses' ),
             )
@@ -69,10 +69,10 @@ class WPCM_Admin {
 
     public function sanitize_airtable_base_id( $value ) {
         $this->clear_plugin_caches(
-            get_option( 'wpcm_airtable_base_id', '' ),
-            get_option( 'wpcm_airtable_table_id', '' ),
+            get_option( 'atvt_airtable_base_id', '' ),
+            get_option( 'atvt_airtable_table_id', '' ),
             sanitize_text_field( $value ),
-            isset( $_POST['wpcm_airtable_table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['wpcm_airtable_table_id'] ) ) : get_option( 'wpcm_airtable_table_id', '' )
+            isset( $_POST['atvt_airtable_table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['atvt_airtable_table_id'] ) ) : get_option( 'atvt_airtable_table_id', '' )
         );
 
         return sanitize_text_field( $value );
@@ -80,9 +80,9 @@ class WPCM_Admin {
 
     public function sanitize_airtable_table_id( $value ) {
         $this->clear_plugin_caches(
-            get_option( 'wpcm_airtable_base_id', '' ),
-            get_option( 'wpcm_airtable_table_id', '' ),
-            isset( $_POST['wpcm_airtable_base_id'] ) ? sanitize_text_field( wp_unslash( $_POST['wpcm_airtable_base_id'] ) ) : get_option( 'wpcm_airtable_base_id', '' ),
+            get_option( 'atvt_airtable_base_id', '' ),
+            get_option( 'atvt_airtable_table_id', '' ),
+            isset( $_POST['atvt_airtable_base_id'] ) ? sanitize_text_field( wp_unslash( $_POST['atvt_airtable_base_id'] ) ) : get_option( 'atvt_airtable_base_id', '' ),
             sanitize_text_field( $value )
         );
 
@@ -96,148 +96,148 @@ class WPCM_Admin {
     }
 
     public function sanitize_mentor_statuses( $value ) {
-        delete_transient( 'wpcm_mentors' );
+        delete_transient( 'atvt_mentors' );
 
         return sanitize_text_field( $value );
     }
 
     private function clear_plugin_caches( $old_base_id = '', $old_table_id = '', $new_base_id = '', $new_table_id = '' ) {
-        delete_transient( 'wpcm_mentors' );
-        delete_transient( 'wpcm_all_statuses' );
-        delete_transient( 'wpcm_valid_field_names' );
+        delete_transient( 'atvt_mentors' );
+        delete_transient( 'atvt_all_statuses' );
+        delete_transient( 'atvt_valid_field_names' );
 
         if ( ! empty( $old_base_id ) && ! empty( $old_table_id ) ) {
-            delete_transient( 'wpcm_table_fields_' . md5( $old_base_id . '|' . $old_table_id ) );
+            delete_transient( 'atvt_table_fields_' . md5( $old_base_id . '|' . $old_table_id ) );
         }
 
         if ( ! empty( $new_base_id ) && ! empty( $new_table_id ) ) {
-            delete_transient( 'wpcm_table_fields_' . md5( $new_base_id . '|' . $new_table_id ) );
+            delete_transient( 'atvt_table_fields_' . md5( $new_base_id . '|' . $new_table_id ) );
         }
     }
 
     public function add_settings_link( $links ) {
-        $url = admin_url( 'options-general.php?page=wpcredits-mentors' );
-        $links[] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'wpcredits-mentors' ) . '</a>';
+        $url = admin_url( 'options-general.php?page=at-view-table' );
+        $links[] = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'at-view-table' ) . '</a>';
         return $links;
     }
 
     public function render_settings_page() {
         if ( ! current_user_can( $this->capability ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpcredits-mentors' ) );
+            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'at-view-table' ) );
         }
 
-        $base_id  = get_option( 'wpcm_airtable_base_id', '' );
-        $table_id = get_option( 'wpcm_airtable_table_id', '' );
-        $token    = get_option( 'wpcm_airtable_token' );
-        $statuses = get_option( 'wpcm_mentor_statuses', 'Active' );
+        $base_id  = get_option( 'atvt_airtable_base_id', '' );
+        $table_id = get_option( 'atvt_airtable_table_id', '' );
+        $token    = get_option( 'atvt_airtable_token' );
+        $statuses = get_option( 'atvt_mentor_statuses', 'Active' );
 
-        $all_statuses = get_transient( 'wpcm_all_statuses' );
+        $all_statuses = get_transient( 'atvt_all_statuses' );
         if ( false === $all_statuses && ! empty( $token ) ) {
-            $api = new WPCM_Airtable_API();
+            $api = new ATVT_Airtable_API();
             $result = $api->get_all_statuses();
             if ( is_array( $result ) ) {
                 $all_statuses = $result;
-                set_transient( 'wpcm_all_statuses', $all_statuses, DAY_IN_SECONDS );
+                set_transient( 'atvt_all_statuses', $all_statuses, DAY_IN_SECONDS );
             }
         }
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__( 'WordPress Credits Mentors Settings', 'wpcredits-mentors' ); ?></h1>
+            <h1><?php echo esc_html__( 'AT View Table Settings', 'at-view-table' ); ?></h1>
 
             <p class="description">
-                <?php echo esc_html__( 'The Airtable API token was already configured from this screen. Base ID and Table ID are now also configured here instead of being stored in code.', 'wpcredits-mentors' ); ?>
+                <?php echo esc_html__( 'Configure the Airtable connection used by AT View Table from this screen.', 'at-view-table' ); ?>
             </p>
 
             <form method="post" action="options.php">
-                <?php settings_fields( 'wpcm_settings' ); ?>
+                <?php settings_fields( 'atvt_settings' ); ?>
                 <table class="form-table">
                     <tr>
                         <th scope="row">
-                            <label for="wpcm_airtable_base_id"><?php echo esc_html__( 'Airtable Base ID', 'wpcredits-mentors' ); ?></label>
+                            <label for="atvt_airtable_base_id"><?php echo esc_html__( 'Airtable Base ID', 'at-view-table' ); ?></label>
                         </th>
                         <td>
                             <input
                                 type="text"
-                                id="wpcm_airtable_base_id"
-                                name="wpcm_airtable_base_id"
+                                id="atvt_airtable_base_id"
+                                name="atvt_airtable_base_id"
                                 value="<?php echo esc_attr( $base_id ); ?>"
                                 class="regular-text"
                             />
                             <p class="description">
-                                <?php echo esc_html__( 'Enter the Airtable Base ID (for example: appXXXXXXXXXXXXXX).', 'wpcredits-mentors' ); ?>
+                                <?php echo esc_html__( 'Enter the Airtable Base ID (for example: appXXXXXXXXXXXXXX).', 'at-view-table' ); ?>
                             </p>
                             <p class="description">
-                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Base ID?', 'wpcredits-mentors' ); ?></a>
+                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Base ID?', 'at-view-table' ); ?></a>
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="wpcm_airtable_table_id"><?php echo esc_html__( 'Airtable Table ID', 'wpcredits-mentors' ); ?></label>
+                            <label for="atvt_airtable_table_id"><?php echo esc_html__( 'Airtable Table ID', 'at-view-table' ); ?></label>
                         </th>
                         <td>
                             <input
                                 type="text"
-                                id="wpcm_airtable_table_id"
-                                name="wpcm_airtable_table_id"
+                                id="atvt_airtable_table_id"
+                                name="atvt_airtable_table_id"
                                 value="<?php echo esc_attr( $table_id ); ?>"
                                 class="regular-text"
                             />
                             <p class="description">
-                                <?php echo esc_html__( 'Enter the Airtable Table ID (for example: tblXXXXXXXXXXXXXX).', 'wpcredits-mentors' ); ?>
+                                <?php echo esc_html__( 'Enter the Airtable Table ID (for example: tblXXXXXXXXXXXXXX).', 'at-view-table' ); ?>
                             </p>
                             <p class="description">
-                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Table ID?', 'wpcredits-mentors' ); ?></a>
+                                <a href="https://support.airtable.com/finding-airtable-ids" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Where do I find the Table ID?', 'at-view-table' ); ?></a>
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="wpcm_airtable_token"><?php echo esc_html__( 'Airtable API Token', 'wpcredits-mentors' ); ?></label>
+                            <label for="atvt_airtable_token"><?php echo esc_html__( 'Airtable API Token', 'at-view-table' ); ?></label>
                         </th>
                         <td>
                             <input
                                 type="password"
-                                id="wpcm_airtable_token"
-                                name="wpcm_airtable_token"
+                                id="atvt_airtable_token"
+                                name="atvt_airtable_token"
                                 value="<?php echo esc_attr( $token ); ?>"
                                 class="regular-text"
                             />
                             <p class="description">
-                                <?php echo esc_html__( 'Enter your Airtable personal access token.', 'wpcredits-mentors' ); ?>
+                                <?php echo esc_html__( 'Enter your Airtable personal access token.', 'at-view-table' ); ?>
                             </p>
                             <p class="description">
-                                <a href="https://airtable.com/create/tokens" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Create or manage Airtable personal access tokens', 'wpcredits-mentors' ); ?></a>
+                                <a href="https://airtable.com/create/tokens" target="_blank" rel="noopener noreferrer"><?php echo esc_html__( 'Create or manage Airtable personal access tokens', 'at-view-table' ); ?></a>
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="wpcm_mentor_statuses"><?php echo esc_html__( 'Allowed Statuses', 'wpcredits-mentors' ); ?></label>
+                            <label for="atvt_mentor_statuses"><?php echo esc_html__( 'Allowed Statuses', 'at-view-table' ); ?></label>
                         </th>
                         <td>
                             <input
                                 type="text"
-                                id="wpcm_mentor_statuses"
-                                name="wpcm_mentor_statuses"
+                                id="atvt_mentor_statuses"
+                                name="atvt_mentor_statuses"
                                 value="<?php echo esc_attr( $statuses ); ?>"
                                 class="regular-text"
                             />
                             <p class="description">
-                                <?php echo esc_html__( 'Comma-separated list of Status values to include. Any mentor whose Status field does not match is excluded.', 'wpcredits-mentors' ); ?>
+                                <?php echo esc_html__( 'Comma-separated list of Status values to include. Any row whose Status field does not match is excluded.', 'at-view-table' ); ?>
                             </p>
                             <?php if ( ! empty( $all_statuses ) ) : ?>
                                 <p class="description">
-                                    <?php echo esc_html__( 'Available statuses in the Airtable database:', 'wpcredits-mentors' ); ?>
+                                    <?php echo esc_html__( 'Available statuses in the Airtable database:', 'at-view-table' ); ?>
                                     <strong><?php echo esc_html( implode( ', ', $all_statuses ) ); ?></strong>
                                     <button
                                         type="button"
                                         class="button button-small"
-                                        id="wpcm-refresh-statuses"
-                                        data-nonce="<?php echo esc_attr( wp_create_nonce( 'wpcm_refresh_statuses' ) ); ?>"
+                                        id="atvt-refresh-statuses"
+                                        data-nonce="<?php echo esc_attr( wp_create_nonce( 'atvt_refresh_statuses' ) ); ?>"
                                         style="margin-left: 8px;"
-                                    ><?php echo esc_html__( 'Refresh', 'wpcredits-mentors' ); ?></button>
-                                    <span id="wpcm-statuses-result" style="margin-left: 6px;"></span>
+                                    ><?php echo esc_html__( 'Refresh', 'at-view-table' ); ?></button>
+                                    <span id="atvt-statuses-result" style="margin-left: 6px;"></span>
                                 </p>
                             <?php endif; ?>
                         </td>
@@ -252,7 +252,7 @@ class WPCM_Admin {
             $available_fields = array();
             $fields_error = null;
             if ( ! empty( $token ) ) {
-                $api = new WPCM_Airtable_API();
+                $api = new ATVT_Airtable_API();
                 $all_fields = $api->get_table_fields();
                 if ( is_wp_error( $all_fields ) ) {
                     $fields_error = $all_fields->get_error_message();
@@ -272,13 +272,13 @@ class WPCM_Admin {
 
             <?php if ( ! empty( $available_fields ) ) : ?>
                 <hr />
-                <h2><?php echo esc_html__( 'Available Airtable Fields', 'wpcredits-mentors' ); ?></h2>
-                <p><?php echo esc_html__( 'These text/URL fields from your Airtable table can be used in the shortcode:', 'wpcredits-mentors' ); ?></p>
+                <h2><?php echo esc_html__( 'Available Airtable Fields', 'at-view-table' ); ?></h2>
+                <p><?php echo esc_html__( 'These text/URL fields from your Airtable table can be used in the shortcode:', 'at-view-table' ); ?></p>
                 <table class="widefat striped" style="max-width: 600px;">
                     <thead>
                         <tr>
-                            <th><?php echo esc_html__( 'Field Name', 'wpcredits-mentors' ); ?></th>
-                            <th><?php echo esc_html__( 'Type', 'wpcredits-mentors' ); ?></th>
+                            <th><?php echo esc_html__( 'Field Name', 'at-view-table' ); ?></th>
+                            <th><?php echo esc_html__( 'Type', 'at-view-table' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -294,33 +294,33 @@ class WPCM_Admin {
 
             <?php if ( ! empty( $token ) ) : ?>
                 <hr />
-                <h2><?php echo esc_html__( 'Test Connection', 'wpcredits-mentors' ); ?></h2>
+                <h2><?php echo esc_html__( 'Test Connection', 'at-view-table' ); ?></h2>
                 <p>
                     <button
                         type="button"
                         class="button"
-                        id="wpcm-test-connection"
-                        data-nonce="<?php echo esc_attr( wp_create_nonce( 'wpcm_test_connection' ) ); ?>"
+                        id="atvt-test-connection"
+                        data-nonce="<?php echo esc_attr( wp_create_nonce( 'atvt_test_connection' ) ); ?>"
                     >
-                        <?php echo esc_html__( 'Test Airtable Connection', 'wpcredits-mentors' ); ?>
+                        <?php echo esc_html__( 'Test Airtable Connection', 'at-view-table' ); ?>
                     </button>
-                    <span id="wpcm-test-result" style="margin-left: 10px;"></span>
+                    <span id="atvt-test-result" style="margin-left: 10px;"></span>
                 </p>
 
                 <script>
                 (function() {
-                    var btn = document.getElementById('wpcm-test-connection');
-                    var result = document.getElementById('wpcm-test-result');
+                    var btn = document.getElementById('atvt-test-connection');
+                    var result = document.getElementById('atvt-test-result');
 
                     btn.addEventListener('click', function() {
-                        result.textContent = '<?php echo esc_js( __( 'Testing...', 'wpcredits-mentors' ) ); ?>';
+                        result.textContent = '<?php echo esc_js( __( 'Testing...', 'at-view-table' ) ); ?>';
                         result.style.color = '#666';
 
                         fetch(ajaxurl, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                             body: new URLSearchParams({
-                                action: 'wpcm_test_airtable',
+                                action: 'atvt_test_airtable',
                                 _ajax_nonce: btn.getAttribute('data-nonce')
                             })
                         })
@@ -330,7 +330,7 @@ class WPCM_Admin {
                             result.style.color = data.success ? '#46b450' : '#dc3232';
                         })
                         .catch(function() {
-                            result.textContent = '<?php echo esc_js( __( 'Request failed.', 'wpcredits-mentors' ) ); ?>';
+                            result.textContent = '<?php echo esc_js( __( 'Request failed.', 'at-view-table' ) ); ?>';
                             result.style.color = '#dc3232';
                         });
                     });
@@ -340,19 +340,19 @@ class WPCM_Admin {
 
             <script>
             (function() {
-                var btn = document.getElementById('wpcm-refresh-statuses');
+                var btn = document.getElementById('atvt-refresh-statuses');
                 if ( ! btn ) return;
-                var result = document.getElementById('wpcm-statuses-result');
+                var result = document.getElementById('atvt-statuses-result');
 
                 btn.addEventListener('click', function() {
-                    result.textContent = '<?php echo esc_js( __( 'Fetching...', 'wpcredits-mentors' ) ); ?>';
+                    result.textContent = '<?php echo esc_js( __( 'Fetching...', 'at-view-table' ) ); ?>';
                     result.style.color = '#666';
 
                     fetch(ajaxurl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: new URLSearchParams({
-                            action: 'wpcm_refresh_statuses',
+                            action: 'atvt_refresh_statuses',
                             _ajax_nonce: btn.getAttribute('data-nonce')
                         })
                     })
@@ -361,7 +361,7 @@ class WPCM_Admin {
                         if ( data.success ) {
                             var strong = btn.parentNode.querySelector('strong');
                             if ( strong ) strong.textContent = data.data;
-                            result.textContent = '<?php echo esc_js( __( 'Updated.', 'wpcredits-mentors' ) ); ?>';
+                            result.textContent = '<?php echo esc_js( __( 'Updated.', 'at-view-table' ) ); ?>';
                             result.style.color = '#46b450';
                         } else {
                             result.textContent = data.data;
@@ -369,7 +369,7 @@ class WPCM_Admin {
                         }
                     })
                     .catch(function() {
-                        result.textContent = '<?php echo esc_js( __( 'Request failed.', 'wpcredits-mentors' ) ); ?>';
+                        result.textContent = '<?php echo esc_js( __( 'Request failed.', 'at-view-table' ) ); ?>';
                         result.style.color = '#dc3232';
                     });
                 });
@@ -377,28 +377,28 @@ class WPCM_Admin {
             </script>
 
             <hr />
-            <h2><?php echo esc_html__( 'Shortcode Usage', 'wpcredits-mentors' ); ?></h2>
-            <p><?php echo esc_html__( 'Use the following shortcode to display mentors on any page or post:', 'wpcredits-mentors' ); ?></p>
-            <p><code>[wpcredits_mentors]</code></p>
-            <p><?php echo esc_html__( 'Optional parameters:', 'wpcredits-mentors' ); ?></p>
+            <h2><?php echo esc_html__( 'Shortcode Usage', 'at-view-table' ); ?></h2>
+            <p><?php echo esc_html__( 'Use the following shortcode to display Airtable data on any page or post:', 'at-view-table' ); ?></p>
+            <p><code>[at_view_table]</code></p>
+            <p><?php echo esc_html__( 'Optional parameters:', 'at-view-table' ); ?></p>
             <ul style="list-style: disc; padding-left: 24px;">
                     <li>
                         <strong><code>columns</code></strong>
                         &mdash;
-                        <?php echo esc_html__( 'Number of columns in grid view (1 to 4). Default: 3.', 'wpcredits-mentors' ); ?>
-                        <br /><code>[wpcredits_mentors columns=2]</code>
+                        <?php echo esc_html__( 'Number of columns in grid view (1 to 4). Default: 3.', 'at-view-table' ); ?>
+                        <br /><code>[at_view_table columns=2]</code>
                     </li>
                     <li>
                         <strong><code>view</code></strong>
                         &mdash;
-                        <?php echo esc_html__( 'Display layout: grid (cards) or table (one row per mentor). Default: grid.', 'wpcredits-mentors' ); ?>
-                        <br /><code>[wpcredits_mentors view=table]</code>
+                        <?php echo esc_html__( 'Display layout: grid (cards) or table (one row per row). Default: grid.', 'at-view-table' ); ?>
+                        <br /><code>[at_view_table view=table]</code>
                     </li>
                     <li>
                         <strong><code>fields</code></strong>
                         &mdash;
-                        <?php echo esc_html__( 'Columns to show in table view. Comma-separated list of Airtable field names (see table above). Backward-compatible aliases: name, email, expertise, hours, sponsor, profile, status, company. Default: Full Name, Email, WordPress profile, Contribution Area - Expertise, Available hours per week, Sponsor company.', 'wpcredits-mentors' ); ?>
-                        <br /><code>[wpcredits_mentors view=table fields="Full Name,Email,Sponsor company"]</code>
+                        <?php echo esc_html__( 'Columns to show in table view. Comma-separated list of Airtable field names (see table above).', 'at-view-table' ); ?>
+                        <br /><code>[at_view_table view=table fields="Full Name,Email,Sponsor company"]</code>
                     </li>
             </ul>
         </div>
@@ -406,15 +406,15 @@ class WPCM_Admin {
     }
 }
 
-add_action( 'wp_ajax_wpcm_test_airtable', 'wpcm_ajax_test_airtable' );
-function wpcm_ajax_test_airtable() {
-    check_ajax_referer( 'wpcm_test_connection' );
+add_action( 'wp_ajax_atvt_test_airtable', 'atvt_ajax_test_airtable' );
+function atvt_ajax_test_airtable() {
+    check_ajax_referer( 'atvt_test_connection' );
 
     if ( ! current_user_can( 'activate_plugins' ) ) {
-        wp_send_json_error( __( 'Permission denied.', 'wpcredits-mentors' ) );
+        wp_send_json_error( __( 'Permission denied.', 'at-view-table' ) );
     }
 
-    $api = new WPCM_Airtable_API();
+    $api = new ATVT_Airtable_API();
     $result = $api->fetch_mentors();
 
     if ( is_wp_error( $result ) ) {
@@ -424,13 +424,13 @@ function wpcm_ajax_test_airtable() {
     $count = count( $result );
 
     if ( 0 === $count ) {
-        $allowed_statuses = get_option( 'wpcm_mentor_statuses', 'Active' );
+        $allowed_statuses = get_option( 'atvt_mentor_statuses', 'Active' );
         $available_statuses = $api->get_all_statuses();
 
         if ( is_array( $available_statuses ) && ! empty( $available_statuses ) ) {
             wp_send_json_success(
                 sprintf(
-                    __( 'Connection successful, but 0 mentors matched Allowed Statuses (%1$s). Available statuses in this table: %2$s', 'wpcredits-mentors' ),
+                    __( 'Connection successful, but 0 rows matched Allowed Statuses (%1$s). Available statuses in this table: %2$s', 'at-view-table' ),
                     $allowed_statuses,
                     implode( ', ', $available_statuses )
                 )
@@ -440,28 +440,28 @@ function wpcm_ajax_test_airtable() {
 
     wp_send_json_success(
         sprintf(
-            __( 'Connection successful. %d active mentors found.', 'wpcredits-mentors' ),
+            __( 'Connection successful. %d rows found.', 'at-view-table' ),
             $count
         )
     );
 }
 
-add_action( 'wp_ajax_wpcm_refresh_statuses', 'wpcm_ajax_refresh_statuses' );
-function wpcm_ajax_refresh_statuses() {
-    check_ajax_referer( 'wpcm_refresh_statuses' );
+add_action( 'wp_ajax_atvt_refresh_statuses', 'atvt_ajax_refresh_statuses' );
+function atvt_ajax_refresh_statuses() {
+    check_ajax_referer( 'atvt_refresh_statuses' );
 
     if ( ! current_user_can( 'activate_plugins' ) ) {
-        wp_send_json_error( __( 'Permission denied.', 'wpcredits-mentors' ) );
+        wp_send_json_error( __( 'Permission denied.', 'at-view-table' ) );
     }
 
-    $api   = new WPCM_Airtable_API();
+    $api   = new ATVT_Airtable_API();
     $result = $api->get_all_statuses();
 
     if ( is_wp_error( $result ) ) {
         wp_send_json_error( $result->get_error_message() );
     }
 
-    set_transient( 'wpcm_all_statuses', $result, DAY_IN_SECONDS );
+    set_transient( 'atvt_all_statuses', $result, DAY_IN_SECONDS );
 
     wp_send_json_success( implode( ', ', $result ) );
 }

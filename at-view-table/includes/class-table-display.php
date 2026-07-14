@@ -1,18 +1,18 @@
 <?php
 /**
- * Mentor display handler — shortcode and rendering logic.
+ * Table display handler and shortcode rendering logic.
  *
- * @package WordPressCredits
+ * @package ATViewTable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class WPCM_Mentor_Display {
+class ATVT_Table_Display {
 
     public function __construct() {
-        add_shortcode( 'wpcredits_mentors', array( $this, 'render_shortcode' ) );
+        add_shortcode( 'at_view_table', array( $this, 'render_shortcode' ) );
     }
 
     /**
@@ -46,7 +46,7 @@ class WPCM_Mentor_Display {
             'columns' => 3,
             'view'    => 'grid',
             'fields'  => '',
-        ), $atts, 'wpcredits_mentors' );
+        ), $atts, 'at_view_table' );
 
         $columns = max( 1, min( 4, intval( $atts['columns'] ) ) );
         $view    = in_array( $atts['view'], array( 'grid', 'table' ), true ) ? $atts['view'] : 'grid';
@@ -54,7 +54,7 @@ class WPCM_Mentor_Display {
         $mentors = $this->get_mentors_cached();
 
         if ( empty( $mentors ) ) {
-            return '<p>' . esc_html__( 'No mentors found.', 'wpcredits-mentors' ) . '</p>';
+            return '<p>' . esc_html__( 'No mentors found.', 'at-view-table' ) . '</p>';
         }
 
         if ( 'table' === $view ) {
@@ -65,7 +65,7 @@ class WPCM_Mentor_Display {
             }
 
             if ( empty( $fields ) ) {
-                return '<p>' . esc_html__( 'Table view is unavailable until Airtable schema access is configured correctly.', 'wpcredits-mentors' ) . '</p>';
+                return '<p>' . esc_html__( 'Table view is unavailable until Airtable schema access is configured correctly.', 'at-view-table' ) . '</p>';
             }
 
             return $this->render_table( $mentors, $fields );
@@ -106,20 +106,20 @@ class WPCM_Mentor_Display {
             return array_values( array_unique( $resolved ) );
         }
 
-        return new WP_Error( 'wpcm_invalid_fields', __( 'No valid Airtable fields were requested for table view.', 'wpcredits-mentors' ) );
+        return new WP_Error( 'atvt_invalid_fields', __( 'No valid Airtable fields were requested for table view.', 'at-view-table' ) );
     }
 
     /**
      * Fetch valid Airtable field names, cached from the schema API.
      */
     private function get_valid_field_names_cached() {
-        $cache_key = 'wpcm_valid_field_names';
+        $cache_key = 'atvt_valid_field_names';
         $cached    = get_transient( $cache_key );
         if ( false !== $cached ) {
             return $cached;
         }
 
-        $api   = new WPCM_Airtable_API();
+        $api   = new ATVT_Airtable_API();
         $fields = $api->get_table_fields();
 
         if ( is_wp_error( $fields ) ) {
@@ -127,7 +127,7 @@ class WPCM_Mentor_Display {
         }
 
         if ( ! is_array( $fields ) ) {
-            return new WP_Error( 'wpcm_invalid_schema_fields', __( 'Airtable schema fields could not be loaded.', 'wpcredits-mentors' ) );
+            return new WP_Error( 'atvt_invalid_schema_fields', __( 'Airtable schema fields could not be loaded.', 'at-view-table' ) );
         }
 
         $names  = wp_list_pluck( $fields, 'name' );
@@ -139,21 +139,21 @@ class WPCM_Mentor_Display {
     private function render_grid( $mentors, $columns ) {
         ob_start();
         ?>
-        <div class="wpcredits-mentors-grid" style="--wpcm-columns: <?php echo esc_attr( $columns ); ?>;">
+        <div class="atvt-grid" style="--atvt-columns: <?php echo esc_attr( $columns ); ?>;">
             <?php foreach ( $mentors as $mentor ) : ?>
-                <div class="wpcredits-mentor-card">
-                    <div class="wpcredits-mentor-card-inner">
-                        <div class="wpcredits-mentor-avatar">
+                <div class="atvt-card">
+                    <div class="atvt-card-inner">
+                        <div class="atvt-avatar">
                             <?php if ( ! empty( $mentor['email'] ) ) : ?>
                                 <?php echo get_avatar( $mentor['email'], 120, '', $mentor['full_name'] ); ?>
                             <?php else : ?>
-                                <div class="wpcredits-mentor-avatar-placeholder">
+                                <div class="atvt-avatar-placeholder">
                                     <?php echo esc_html( strtoupper( substr( $mentor['full_name'], 0, 1 ) ) ); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
 
-                        <h3 class="wpcredits-mentor-name">
+                        <h3 class="atvt-name">
                             <?php if ( ! empty( $mentor['wordpress_profile'] ) ) : ?>
                                 <a href="<?php echo esc_url( $mentor['wordpress_profile'] ); ?>" target="_blank" rel="noopener noreferrer">
                                     <?php echo esc_html( $mentor['full_name'] ); ?>
@@ -164,19 +164,19 @@ class WPCM_Mentor_Display {
                         </h3>
 
                         <?php if ( ! empty( $mentor['expertise'] ) ) : ?>
-                            <div class="wpcredits-mentor-expertise">
+                            <div class="atvt-expertise">
                                 <?php foreach ( $mentor['expertise'] as $area ) : ?>
-                                    <span class="wpcredits-mentor-tag"><?php echo esc_html( $area ); ?></span>
+                                    <span class="atvt-tag"><?php echo esc_html( $area ); ?></span>
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
 
                         <?php if ( $mentor['sponsored'] && ! empty( $mentor['sponsor_company'] ) ) : ?>
-                            <div class="wpcredits-mentor-sponsored">
-                                <span class="wpcredits-mentor-sponsored-label">
+                            <div class="atvt-sponsored">
+                                <span class="atvt-sponsored-label">
                                     <?php
                                     printf(
-                                        esc_html__( 'Sponsored by %s', 'wpcredits-mentors' ),
+                                        esc_html__( 'Sponsored by %s', 'at-view-table' ),
                                         esc_html( $mentor['sponsor_company'] )
                                     );
                                     ?>
@@ -194,8 +194,8 @@ class WPCM_Mentor_Display {
     private function render_table( $mentors, $fields ) {
         ob_start();
         ?>
-        <div class="wpcredits-mentors-table-wrap">
-            <table class="wpcredits-mentors-table">
+        <div class="atvt-table-wrap">
+            <table class="atvt-table">
                 <thead>
                     <tr>
                         <?php foreach ( $fields as $field_name ) : ?>
@@ -207,7 +207,7 @@ class WPCM_Mentor_Display {
                     <?php foreach ( $mentors as $mentor ) : ?>
                         <tr>
                             <?php foreach ( $fields as $field_name ) : ?>
-                                <td class="<?php echo 'Full Name' === $field_name ? 'wpcm-table-name-cell' : ''; ?>" data-label="<?php echo esc_attr( $field_name ); ?>">
+                                <td class="<?php echo 'Full Name' === $field_name ? 'atvt-table-name-cell' : ''; ?>" data-label="<?php echo esc_attr( $field_name ); ?>">
                                     <?php $this->render_table_cell( $mentor, $field_name ); ?>
                                 </td>
                             <?php endforeach; ?>
@@ -223,7 +223,7 @@ class WPCM_Mentor_Display {
     private function render_table_cell( $mentor, $field_name ) {
         if ( 'Full Name' === $field_name ) {
             if ( ! empty( $mentor['email'] ) ) {
-                echo get_avatar( $mentor['email'], 32, '', $mentor['full_name'], array( 'class' => 'wpcm-table-avatar' ) );
+                echo get_avatar( $mentor['email'], 32, '', $mentor['full_name'], array( 'class' => 'atvt-table-avatar' ) );
             }
             if ( ! empty( $mentor['wordpress_profile'] ) ) {
                 echo '<a href="' . esc_url( $mentor['wordpress_profile'] ) . '" target="_blank" rel="noopener noreferrer">'
@@ -237,10 +237,10 @@ class WPCM_Mentor_Display {
         $value = isset( $mentor['raw_fields'][ $field_name ] ) ? $mentor['raw_fields'][ $field_name ] : '';
 
         if ( '' === $value && '0' !== $value ) {
-            echo '<span class="wpcm-table-na">&mdash;</span>';
+            echo '<span class="atvt-table-na">&mdash;</span>';
         } elseif ( is_array( $value ) ) {
             foreach ( $value as $item ) {
-                echo '<span class="wpcredits-mentor-tag">' . esc_html( $item ) . '</span>';
+                echo '<span class="atvt-tag">' . esc_html( $item ) . '</span>';
             }
         } elseif ( is_string( $value ) && filter_var( $value, FILTER_VALIDATE_URL ) ) {
             echo '<a href="' . esc_url( $value ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $value ) . '</a>';
@@ -250,21 +250,21 @@ class WPCM_Mentor_Display {
     }
 
     private function get_mentors_cached() {
-        $cache_key = 'wpcm_mentors';
+        $cache_key = 'atvt_mentors';
         $mentors   = get_transient( $cache_key );
 
         if ( false !== $mentors ) {
             return $mentors;
         }
 
-        $api     = new WPCM_Airtable_API();
+        $api     = new ATVT_Airtable_API();
         $mentors = $api->fetch_mentors();
 
         if ( ! is_array( $mentors ) || is_wp_error( $mentors ) ) {
             return array();
         }
 
-        set_transient( $cache_key, $mentors, WPCM_CACHE_TTL );
+        set_transient( $cache_key, $mentors, ATVT_CACHE_TTL );
 
         return $mentors;
     }
