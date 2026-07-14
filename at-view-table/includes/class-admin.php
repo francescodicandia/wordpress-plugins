@@ -175,6 +175,79 @@ class ATVT_Admin {
                 <?php submit_button(); ?>
             </form>
 
+            <?php if ( ! empty( $base_id ) && ! empty( $token ) ) : ?>
+                <hr />
+                <h2><?php echo esc_html__( 'Inspect Table', 'at-view-table' ); ?></h2>
+                <p class="description">
+                    <?php echo esc_html__( 'Enter an Airtable Table ID to inspect its fields and copy the exact column names into the shortcode fields attribute.', 'at-view-table' ); ?>
+                </p>
+                <p>
+                    <label for="atvt-inspect-table-id" class="screen-reader-text"><?php echo esc_html__( 'Table ID to inspect', 'at-view-table' ); ?></label>
+                    <input
+                        type="text"
+                        id="atvt-inspect-table-id"
+                        value=""
+                        class="regular-text"
+                        placeholder="tblXXXXXXXXXXXXXX"
+                    />
+                    <button
+                        type="button"
+                        class="button"
+                        id="atvt-inspect-table"
+                        data-nonce="<?php echo esc_attr( wp_create_nonce( 'atvt_inspect_table' ) ); ?>"
+                    >
+                        <?php echo esc_html__( 'Inspect Table', 'at-view-table' ); ?>
+                    </button>
+                    <span id="atvt-inspect-result" style="margin-left: 10px;"></span>
+                </p>
+                <div id="atvt-inspect-output"></div>
+
+                <script>
+                (function() {
+                    var btn = document.getElementById('atvt-inspect-table');
+                    var input = document.getElementById('atvt-inspect-table-id');
+                    var result = document.getElementById('atvt-inspect-result');
+                    var output = document.getElementById('atvt-inspect-output');
+
+                    btn.addEventListener('click', function() {
+                        var tableId = input.value.trim();
+
+                        if (!tableId) {
+                            result.textContent = '<?php echo esc_js( __( 'Enter a Table ID first.', 'at-view-table' ) ); ?>';
+                            result.style.color = '#dc3232';
+                            output.innerHTML = '';
+                            return;
+                        }
+
+                        result.textContent = '<?php echo esc_js( __( 'Inspecting...', 'at-view-table' ) ); ?>';
+                        result.style.color = '#666';
+                        output.innerHTML = '';
+
+                        fetch(ajaxurl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({
+                                action: 'atvt_inspect_table',
+                                _ajax_nonce: btn.getAttribute('data-nonce'),
+                                table_id: tableId
+                            })
+                        })
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            result.textContent = data.data.message;
+                            result.style.color = data.success ? '#46b450' : '#dc3232';
+                            output.innerHTML = data.success && data.data.html ? data.data.html : '';
+                        })
+                        .catch(function() {
+                            result.textContent = '<?php echo esc_js( __( 'Request failed.', 'at-view-table' ) ); ?>';
+                            result.style.color = '#dc3232';
+                            output.innerHTML = '';
+                        });
+                    });
+                })();
+                </script>
+            <?php endif; ?>
+
             <?php if ( ! empty( $token ) ) : ?>
                 <hr />
                 <h2><?php echo esc_html__( 'Test Connection', 'at-view-table' ); ?></h2>
@@ -281,6 +354,71 @@ function atvt_ajax_test_airtable() {
         sprintf(
             __( 'Connection successful. The Airtable base is reachable and returned %d table definitions.', 'at-view-table' ),
             isset( $result['tables'] ) && is_array( $result['tables'] ) ? count( $result['tables'] ) : 0
+        )
+    );
+}
+
+add_action( 'wp_ajax_atvt_inspect_table', 'atvt_ajax_inspect_table' );
+function atvt_ajax_inspect_table() {
+    check_ajax_referer( 'atvt_inspect_table' );
+
+    if ( ! current_user_can( 'activate_plugins' ) ) {
+        wp_send_json_error(
+            array(
+                'message' => __( 'Permission denied.', 'at-view-table' ),
+            )
+        );
+    }
+
+    $table_id = isset( $_POST['table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['table_id'] ) ) : '';
+
+    if ( '' === $table_id ) {
+        wp_send_json_error(
+            array(
+                'message' => __( 'The table_id parameter is required.', 'at-view-table' ),
+            )
+        );
+    }
+
+    $api    = new ATVT_Airtable_API();
+    $fields = $api->get_table_fields( $table_id );
+
+    if ( is_wp_error( $fields ) ) {
+        wp_send_json_error(
+            array(
+                'message' => $fields->get_error_message(),
+            )
+        );
+    }
+
+    $field_names = wp_list_pluck( $fields, 'name' );
+
+    ob_start();
+    ?>
+    <table class="widefat striped" style="max-width: 720px; margin-top: 12px;">
+        <thead>
+            <tr>
+                <th><?php echo esc_html__( 'Field Name', 'at-view-table' ); ?></th>
+                <th><?php echo esc_html__( 'Type', 'at-view-table' ); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ( $fields as $field ) : ?>
+                <tr>
+                    <td><code><?php echo esc_html( $field['name'] ); ?></code></td>
+                    <td><?php echo esc_html( $field['type'] ); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <p><strong><?php echo esc_html__( 'Copy for fields:', 'at-view-table' ); ?></strong> <code><?php echo esc_html( implode( ',', $field_names ) ); ?></code></p>
+    <?php
+    $html = ob_get_clean();
+
+    wp_send_json_success(
+        array(
+            'message' => __( 'Table schema loaded successfully.', 'at-view-table' ),
+            'html'    => $html,
         )
     );
 }
