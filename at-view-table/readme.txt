@@ -4,7 +4,7 @@ Tags: airtable, table, shortcode, data, admin
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ Example shortcode:
 3. Go to `Settings > AT View Table`.
 4. Enter your Airtable Base ID.
 5. Enter your Airtable Personal Access Token.
-6. Optionally set a default row limit.
+6. Optionally set a default row limit and cache TTL.
 7. Use the `Inspect Table` tool to discover the exact field names for a table.
 8. Add the shortcode to a page or post.
 
@@ -61,6 +61,11 @@ Yes. You must provide a comma-separated list of Airtable field names to display.
 3. Example shortcode usage and table output.
 
 == Changelog ==
+
+= 0.2.0 =
+* Client-side column sorting with sort_field / sort_direction shortcode attributes.
+* Client-side pagination with page_size shortcode attribute.
+* Configurable cache TTL (minutes) in plugin settings to control how often Airtable data is refreshed.
 
 = 0.1.0 =
 * Initial public version of AT View Table.

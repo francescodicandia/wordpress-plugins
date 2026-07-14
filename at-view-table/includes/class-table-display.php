@@ -143,7 +143,7 @@ class ATVT_Table_Display {
 
         $names  = wp_list_pluck( $fields, 'name' );
 
-        set_transient( $cache_key, $names, HOUR_IN_SECONDS );
+        set_transient( $cache_key, $names, atvt_get_cache_ttl() );
         return $names;
     }
 
@@ -222,7 +222,7 @@ class ATVT_Table_Display {
             return array();
         }
 
-        set_transient( $cache_key, $records, ATVT_CACHE_TTL );
+        set_transient( $cache_key, $records, atvt_get_cache_ttl() );
 
         return $records;
     }

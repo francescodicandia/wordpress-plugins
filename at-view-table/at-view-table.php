@@ -25,6 +25,23 @@ if ( ! defined( 'ATVT_CACHE_TTL' ) ) {
     define( 'ATVT_CACHE_TTL', HOUR_IN_SECONDS );
 }
 
+/**
+ * Get the cache TTL in seconds from the admin setting.
+ *
+ * Falls back to ATVT_CACHE_TTL constant or 1 hour if the option is not set.
+ *
+ * @return int Cache TTL in seconds.
+ */
+function atvt_get_cache_ttl() {
+    $ttl_minutes = intval( get_option( 'atvt_cache_ttl', 0 ) );
+
+    if ( $ttl_minutes > 0 ) {
+        return $ttl_minutes * MINUTE_IN_SECONDS;
+    }
+
+    return ATVT_CACHE_TTL;
+}
+
 require_once ATVT_PLUGIN_DIR . 'includes/class-airtable-api.php';
 require_once ATVT_PLUGIN_DIR . 'includes/class-table-display.php';
 require_once ATVT_PLUGIN_DIR . 'includes/class-admin.php';
