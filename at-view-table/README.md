@@ -46,7 +46,8 @@ The plugin lets you:
 | `filter_value` | No | Value used with `filter_field` |
 | `sort_field` | No | Field used for sorting |
 | `sort_direction` | No | `asc` or `desc` |
-| `limit` | No | Maximum number of rows to render |
+| `limit` | No | Maximum number of rows to fetch from Airtable |
+| `page_size` | No | Rows per page for client-side pagination (defaults to `limit`) |
 
 ### Examples
 
@@ -55,12 +56,15 @@ The plugin lets you:
 [at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" filter_field="Status" filter_value="Active"]
 [at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" sort_field="Name" sort_direction="asc"]
 [at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="25"]
+[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="100" page_size="25"]
 ```
 
 ## Notes
 
 - `table_id` and `fields` are required.
 - If `limit` is omitted, the plugin uses the global default limit from settings.
+- If `page_size` is omitted, no pagination controls are shown (all rows on one page).
+- Sorting and pagination are client-side (JavaScript). All rows up to `limit` are loaded in the page.
 - The plugin uses the Airtable Meta API to inspect table fields.
 
 ## License

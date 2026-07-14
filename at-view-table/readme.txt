@@ -19,11 +19,11 @@ The plugin is designed for explicit control:
 * connect WordPress to one Airtable base using a Base ID and Personal Access Token
 * inspect a table schema from the WordPress admin area
 * choose exactly which fields to render
-* optionally filter, sort, and limit rows in the shortcode
+* optionally filter, sort, limit, and paginate rows in the shortcode
 
 Example shortcode:
 
-`[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" filter_field="Status" filter_value="Active" sort_field="Name" sort_direction="asc" limit="25"]`
+`[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" filter_field="Status" filter_value="Active" sort_field="Name" sort_direction="asc" limit="100" page_size="25"]`
 
 == Installation ==
 
@@ -66,5 +66,5 @@ Yes. You must provide a comma-separated list of Airtable field names to display.
 * Initial public version of AT View Table.
 * Airtable connection via Base ID and Personal Access Token.
 * Explicit shortcode with required table and field selection.
-* Optional filter, sort, and limit parameters.
+* Optional filter, sort, limit, and pagination parameters.
 * Manual Inspect Table admin tool.

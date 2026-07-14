@@ -326,8 +326,14 @@ class ATVT_Admin {
                 <li>
                     <strong><code>limit</code></strong>
                     &mdash;
-                    <?php echo esc_html__( 'Optional. Maximum number of rows to show. If omitted, the global default limit is used.', 'at-view-table' ); ?>
-                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="25"]</code>
+                    <?php echo esc_html__( 'Optional. Maximum number of rows to fetch from Airtable. If omitted, the global default limit is used.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="100"]</code>
+                </li>
+                <li>
+                    <strong><code>page_size</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Optional. Rows per page for client-side pagination. If omitted, all rows are shown on one page.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="100" page_size="25"]</code>
                 </li>
             </ul>
         </div>
