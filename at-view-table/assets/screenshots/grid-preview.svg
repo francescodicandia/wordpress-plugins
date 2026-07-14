@@ -1,36 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
-  <title id="title">WordPress Credits Mentors grid preview</title>
-  <desc id="desc">Illustrative preview of mentor cards with avatar, name, expertise tags, and sponsor badge.</desc>
+  <title id="title">AT View Table inspect tool preview</title>
+  <desc id="desc">Illustrative preview of the manual Inspect Table tool showing Airtable fields and types.</desc>
   <rect width="1280" height="760" fill="#f6f7f7"/>
-  <text x="76" y="84" fill="#1d2327" font-family="Arial, sans-serif" font-size="34" font-weight="700">[wpcredits_mentors]</text>
-  <g transform="translate(76 128)">
-    <g>
-      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
-      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
-      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
-      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
-      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Jane Mentor</text>
-      <rect x="78" y="264" width="90" height="30" rx="15" fill="#e8f0fe"/><text x="123" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Core</text>
-      <rect x="178" y="264" width="96" height="30" rx="15" fill="#e8f0fe"/><text x="226" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Design</text>
-      <rect x="118" y="308" width="114" height="30" rx="15" fill="#e8f0fe"/><text x="175" y="328" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Docs</text>
-      <rect x="86" y="386" width="178" height="28" rx="14" fill="#f0f0f1"/><text x="175" y="405" text-anchor="middle" fill="#50575e" font-family="Arial, sans-serif" font-size="15">Sponsored by Example Co.</text>
-    </g>
-    <g transform="translate(389 0)">
-      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
-      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
-      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
-      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
-      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Marco Contributor</text>
-      <rect x="72" y="264" width="110" height="30" rx="15" fill="#e8f0fe"/><text x="127" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Community</text>
-      <rect x="194" y="264" width="86" height="30" rx="15" fill="#e8f0fe"/><text x="237" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Polyglots</text>
-    </g>
-    <g transform="translate(778 0)">
-      <rect width="350" height="500" rx="18" fill="#ffffff" stroke="#dcdcde"/>
-      <circle cx="175" cy="110" r="60" fill="#dcdcde"/>
-      <circle cx="175" cy="95" r="22" fill="#8c8f94"/>
-      <path d="M136 147c14-22 64-22 78 0" fill="#8c8f94"/>
-      <text x="175" y="228" text-anchor="middle" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Aisha Supporter</text>
-      <rect x="100" y="264" width="150" height="30" rx="15" fill="#e8f0fe"/><text x="175" y="284" text-anchor="middle" fill="#1967d2" font-family="Arial, sans-serif" font-size="16">Training Team</text>
-    </g>
+  <text x="76" y="84" fill="#1d2327" font-family="Arial, sans-serif" font-size="34" font-weight="700">Inspect Table</text>
+  <rect x="76" y="128" width="1128" height="520" rx="18" fill="#ffffff" stroke="#dcdcde"/>
+  <text x="112" y="180" fill="#1d2327" font-family="Arial, sans-serif" font-size="20" font-weight="700">Table ID</text>
+  <rect x="112" y="198" width="360" height="42" rx="8" fill="#ffffff" stroke="#8c8f94"/>
+  <text x="132" y="225" fill="#1d2327" font-family="Arial, sans-serif" font-size="20">tblXXXXXXXXXXXXXX</text>
+  <rect x="492" y="194" width="126" height="46" rx="8" fill="#2271b1"/>
+  <text x="516" y="223" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Inspect</text>
+  <text x="112" y="296" fill="#1d2327" font-family="Arial, sans-serif" font-size="26" font-weight="700">Fields found</text>
+  <rect x="112" y="322" width="1056" height="250" rx="12" fill="#ffffff" stroke="#dcdcde"/>
+  <rect x="112" y="322" width="1056" height="52" rx="12" fill="#f0f0f1"/>
+  <text x="148" y="355" fill="#1d2327" font-family="Arial, sans-serif" font-size="18" font-weight="700">Field Name</text>
+  <text x="890" y="355" fill="#1d2327" font-family="Arial, sans-serif" font-size="18" font-weight="700">Type</text>
+  <g fill="#1d2327" font-family="Arial, sans-serif" font-size="18">
+    <text x="148" y="416">Name</text><text x="890" y="416">singleLineText</text>
+    <text x="148" y="462">Status</text><text x="890" y="462">singleSelect</text>
+    <text x="148" y="508">Owner</text><text x="890" y="508">singleLineText</text>
   </g>
+  <text x="112" y="620" fill="#50575e" font-family="Arial, sans-serif" font-size="17">Copy for fields: Name,Status,Owner</text>
 </svg>
