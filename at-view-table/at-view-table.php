@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AT View Table
  * Description: Display Airtable table data in a WordPress table view.
- * Version:     0.1.0
+ * Version:     0.2.0
  * Author:      WordPress Credits Team
  * Requires at least: 5.0
  * Requires PHP: 7.4
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'ATVT_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ATVT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'ATVT_VERSION', '0.1.0' );
+define( 'ATVT_VERSION', '0.2.0' );
 
 if ( ! defined( 'ATVT_CACHE_TTL' ) ) {
     define( 'ATVT_CACHE_TTL', HOUR_IN_SECONDS );
