@@ -38,12 +38,20 @@ function atvt_init() {
 }
 add_action( 'plugins_loaded', 'atvt_init' );
 
-function atvt_enqueue_styles() {
+function atvt_enqueue_assets() {
     wp_enqueue_style(
         'at-view-table',
         ATVT_PLUGIN_URL . 'assets/css/at-view-table.css',
         array(),
         ATVT_VERSION
     );
+
+    wp_enqueue_script(
+        'at-view-table',
+        ATVT_PLUGIN_URL . 'assets/js/at-view-table.js',
+        array(),
+        ATVT_VERSION,
+        true
+    );
 }
-add_action( 'wp_enqueue_scripts', 'atvt_enqueue_styles' );
+add_action( 'wp_enqueue_scripts', 'atvt_enqueue_assets' );

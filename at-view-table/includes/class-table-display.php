@@ -150,7 +150,7 @@ class ATVT_Table_Display {
                 <thead>
                     <tr>
                         <?php foreach ( $fields as $field_name ) : ?>
-                            <th><?php echo esc_html( $field_name ); ?></th>
+                            <th class="atvt-sortable" data-field="<?php echo esc_attr( $field_name ); ?>" tabindex="0"><?php echo esc_html( $field_name ); ?></th>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
