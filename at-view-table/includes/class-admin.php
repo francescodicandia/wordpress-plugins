@@ -16,6 +16,8 @@ class ATVT_Admin {
     public function __construct() {
         add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
         add_action( 'admin_init', array( $this, 'register_settings' ) );
+        add_action( 'wp_ajax_atvt_test_airtable', array( __CLASS__, 'ajax_test_airtable' ) );
+        add_action( 'wp_ajax_atvt_inspect_table', array( __CLASS__, 'ajax_inspect_table' ) );
         add_filter(
             'plugin_action_links_' . plugin_basename( ATVT_PLUGIN_DIR . 'at-view-table.php' ),
             array( $this, 'add_settings_link' )
@@ -380,93 +382,90 @@ class ATVT_Admin {
         </div>
         <?php
     }
-}
+    public static function ajax_test_airtable() {
+        check_ajax_referer( 'atvt_test_connection' );
 
-add_action( 'wp_ajax_atvt_test_airtable', 'atvt_ajax_test_airtable' );
-function atvt_ajax_test_airtable() {
-    check_ajax_referer( 'atvt_test_connection' );
+        if ( ! current_user_can( 'activate_plugins' ) ) {
+            wp_send_json_error( __( 'Permission denied.', 'at-view-table' ) );
+        }
 
-    if ( ! current_user_can( 'activate_plugins' ) ) {
-        wp_send_json_error( __( 'Permission denied.', 'at-view-table' ) );
-    }
+        $api    = new ATVT_Airtable_API();
+        $result = $api->test_connection();
 
-    $api = new ATVT_Airtable_API();
-    $result = $api->test_connection();
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( $result->get_error_message() );
+        }
 
-    if ( is_wp_error( $result ) ) {
-        wp_send_json_error( $result->get_error_message() );
-    }
-
-    wp_send_json_success(
-        sprintf(
-            /* translators: %d: number of Airtable tables returned by the base schema. */
-            __( 'Connection successful. The Airtable base is reachable and returned %d table definitions.', 'at-view-table' ),
-            isset( $result['tables'] ) && is_array( $result['tables'] ) ? count( $result['tables'] ) : 0
-        )
-    );
-}
-
-add_action( 'wp_ajax_atvt_inspect_table', 'atvt_ajax_inspect_table' );
-function atvt_ajax_inspect_table() {
-    check_ajax_referer( 'atvt_inspect_table' );
-
-    if ( ! current_user_can( 'activate_plugins' ) ) {
-        wp_send_json_error(
-            array(
-                'message' => __( 'Permission denied.', 'at-view-table' ),
+        wp_send_json_success(
+            sprintf(
+                /* translators: %d: number of Airtable tables returned by the base schema. */
+                __( 'Connection successful. The Airtable base is reachable and returned %d table definitions.', 'at-view-table' ),
+                isset( $result['tables'] ) && is_array( $result['tables'] ) ? count( $result['tables'] ) : 0
             )
         );
     }
 
-    $table_id = isset( $_POST['table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['table_id'] ) ) : '';
+    public static function ajax_inspect_table() {
+        check_ajax_referer( 'atvt_inspect_table' );
 
-    if ( '' === $table_id ) {
-        wp_send_json_error(
-            array(
-                'message' => __( 'The table_id parameter is required.', 'at-view-table' ),
-            )
-        );
-    }
+        if ( ! current_user_can( 'activate_plugins' ) ) {
+            wp_send_json_error(
+                array(
+                    'message' => __( 'Permission denied.', 'at-view-table' ),
+                )
+            );
+        }
 
-    $api    = new ATVT_Airtable_API();
-    $fields = $api->get_table_fields( $table_id );
+        $table_id = isset( $_POST['table_id'] ) ? sanitize_text_field( wp_unslash( $_POST['table_id'] ) ) : '';
 
-    if ( is_wp_error( $fields ) ) {
-        wp_send_json_error(
-            array(
-                'message' => $fields->get_error_message(),
-            )
-        );
-    }
+        if ( '' === $table_id ) {
+            wp_send_json_error(
+                array(
+                    'message' => __( 'The table_id parameter is required.', 'at-view-table' ),
+                )
+            );
+        }
 
-    $field_names = wp_list_pluck( $fields, 'name' );
+        $api    = new ATVT_Airtable_API();
+        $fields = $api->get_table_fields( $table_id );
 
-    ob_start();
-    ?>
-    <table class="widefat striped" style="max-width: 720px; margin-top: 12px;">
-        <thead>
-            <tr>
-                <th><?php echo esc_html__( 'Field Name', 'at-view-table' ); ?></th>
-                <th><?php echo esc_html__( 'Type', 'at-view-table' ); ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ( $fields as $field ) : ?>
+        if ( is_wp_error( $fields ) ) {
+            wp_send_json_error(
+                array(
+                    'message' => $fields->get_error_message(),
+                )
+            );
+        }
+
+        $field_names = wp_list_pluck( $fields, 'name' );
+
+        ob_start();
+        ?>
+        <table class="widefat striped" style="max-width: 720px; margin-top: 12px;">
+            <thead>
                 <tr>
-                    <td><code><?php echo esc_html( $field['name'] ); ?></code></td>
-                    <td><?php echo esc_html( $field['type'] ); ?></td>
+                    <th><?php echo esc_html__( 'Field Name', 'at-view-table' ); ?></th>
+                    <th><?php echo esc_html__( 'Type', 'at-view-table' ); ?></th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <p><strong><?php echo esc_html__( 'Copy for fields:', 'at-view-table' ); ?></strong> <code><?php echo esc_html( implode( ',', $field_names ) ); ?></code></p>
-    <?php
-    $html = ob_get_clean();
+            </thead>
+            <tbody>
+                <?php foreach ( $fields as $field ) : ?>
+                    <tr>
+                        <td><code><?php echo esc_html( $field['name'] ); ?></code></td>
+                        <td><?php echo esc_html( $field['type'] ); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <p><strong><?php echo esc_html__( 'Copy for fields:', 'at-view-table' ); ?></strong> <code><?php echo esc_html( implode( ',', $field_names ) ); ?></code></p>
+        <?php
+        $html = ob_get_clean();
 
-    wp_send_json_success(
-        array(
-            'message' => __( 'Table schema loaded successfully.', 'at-view-table' ),
-            'html'    => $html,
-        )
-    );
+        wp_send_json_success(
+            array(
+                'message' => __( 'Table schema loaded successfully.', 'at-view-table' ),
+                'html'    => $html,
+            )
+        );
+    }
 }
