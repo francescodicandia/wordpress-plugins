@@ -7,6 +7,7 @@
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Text Domain: at-view-table
+ * Domain Path: /languages
  * License:     GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
@@ -47,6 +48,8 @@ require_once ATVT_PLUGIN_DIR . 'includes/class-table-display.php';
 require_once ATVT_PLUGIN_DIR . 'includes/class-admin.php';
 
 function atvt_init() {
+    load_plugin_textdomain( 'at-view-table', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+
     new ATVT_Table_Display();
 
     if ( is_admin() ) {
