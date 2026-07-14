@@ -17,36 +17,86 @@ class ATVT_Table_Display {
 
     public function render_shortcode( $atts ) {
         $atts = shortcode_atts( array(
-            'fields' => '',
+            'table_id'       => '',
+            'fields'         => '',
+            'filter_field'   => '',
+            'filter_value'   => '',
+            'sort_field'     => '',
+            'sort_direction' => '',
+            'limit'          => '',
         ), $atts, 'at_view_table' );
 
-        $records = $this->get_records_cached();
+        $query_args = $this->normalize_shortcode_args( $atts );
 
-        if ( empty( $records ) ) {
-            return '<p>' . esc_html__( 'No Airtable rows found.', 'at-view-table' ) . '</p>';
+        if ( is_wp_error( $query_args ) ) {
+            return '<p>' . esc_html( $query_args->get_error_message() ) . '</p>';
         }
 
-        $fields = $this->parse_fields( $atts['fields'] );
+        $fields = $this->parse_fields( $query_args['fields'], $query_args['table_id'] );
 
         if ( is_wp_error( $fields ) ) {
             return '<p>' . esc_html( $fields->get_error_message() ) . '</p>';
         }
 
-        if ( empty( $fields ) ) {
-            return '<p>' . esc_html__( 'No Airtable fields are available for table rendering.', 'at-view-table' ) . '</p>';
+        $query_args['fields'] = $fields;
+
+        $records = $this->get_records_cached( $query_args );
+
+        if ( is_wp_error( $records ) ) {
+            return '<p>' . esc_html( $records->get_error_message() ) . '</p>';
+        }
+
+        if ( empty( $records ) ) {
+            return '<p>' . esc_html__( 'No Airtable rows found.', 'at-view-table' ) . '</p>';
         }
 
         return $this->render_table( $records, $fields );
     }
 
-    private function parse_fields( $raw ) {
-        $valid = $this->get_valid_field_names_cached();
+    private function normalize_shortcode_args( $atts ) {
+        $table_id = sanitize_text_field( $atts['table_id'] );
 
-        if ( is_wp_error( $valid ) ) {
-            return $valid;
+        if ( '' === $table_id ) {
+            return new WP_Error( 'atvt_missing_table_id', __( 'The table_id attribute is required.', 'at-view-table' ) );
         }
 
-        if ( empty( $raw ) ) {
+        $fields = trim( $atts['fields'] );
+
+        if ( '' === $fields ) {
+            return new WP_Error( 'atvt_missing_fields', __( 'The fields attribute is required.', 'at-view-table' ) );
+        }
+
+        $filter_field = sanitize_text_field( $atts['filter_field'] );
+        $filter_value = sanitize_text_field( $atts['filter_value'] );
+
+        if ( ( '' === $filter_field && '' !== $filter_value ) || ( '' !== $filter_field && '' === $filter_value ) ) {
+            return new WP_Error( 'atvt_incomplete_filter', __( 'Use filter_field and filter_value together.', 'at-view-table' ) );
+        }
+
+        $sort_direction = strtolower( sanitize_text_field( $atts['sort_direction'] ) );
+
+        if ( '' !== $sort_direction && ! in_array( $sort_direction, array( 'asc', 'desc' ), true ) ) {
+            return new WP_Error( 'atvt_invalid_sort_direction', __( 'sort_direction must be either asc or desc.', 'at-view-table' ) );
+        }
+
+        $limit = '' === $atts['limit'] ? intval( get_option( 'atvt_default_limit', 25 ) ) : intval( $atts['limit'] );
+        $limit = max( 1, $limit );
+
+        return array(
+            'table_id'       => $table_id,
+            'fields'         => $fields,
+            'filter_field'   => $filter_field,
+            'filter_value'   => $filter_value,
+            'sort_field'     => sanitize_text_field( $atts['sort_field'] ),
+            'sort_direction' => '' === $sort_direction ? 'asc' : $sort_direction,
+            'limit'          => $limit,
+        );
+    }
+
+    private function parse_fields( $raw, $table_id ) {
+        $valid = $this->get_valid_field_names_cached( $table_id );
+
+        if ( is_wp_error( $valid ) ) {
             return $valid;
         }
 
@@ -68,15 +118,15 @@ class ATVT_Table_Display {
     /**
      * Fetch valid Airtable field names, cached from the schema API.
      */
-    private function get_valid_field_names_cached() {
-        $cache_key = 'atvt_valid_field_names';
+    private function get_valid_field_names_cached( $table_id ) {
+        $cache_key = 'atvt_valid_field_names_' . md5( $table_id );
         $cached    = get_transient( $cache_key );
         if ( false !== $cached ) {
             return $cached;
         }
 
         $api   = new ATVT_Airtable_API();
-        $fields = $api->get_table_fields();
+        $fields = $api->get_table_fields( $table_id );
 
         if ( is_wp_error( $fields ) ) {
             return $fields;
@@ -137,8 +187,8 @@ class ATVT_Table_Display {
         }
     }
 
-    private function get_records_cached() {
-        $cache_key = 'atvt_records';
+    private function get_records_cached( $query_args ) {
+        $cache_key = 'atvt_records_' . md5( wp_json_encode( $query_args ) );
         $records   = get_transient( $cache_key );
 
         if ( false !== $records ) {
@@ -146,9 +196,13 @@ class ATVT_Table_Display {
         }
 
         $api     = new ATVT_Airtable_API();
-        $records = $api->fetch_records();
+        $records = $api->fetch_records( $query_args );
 
-        if ( ! is_array( $records ) || is_wp_error( $records ) ) {
+        if ( is_wp_error( $records ) ) {
+            return $records;
+        }
+
+        if ( ! is_array( $records ) ) {
             return array();
         }
 

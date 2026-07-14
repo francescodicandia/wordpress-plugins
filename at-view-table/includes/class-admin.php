@@ -379,14 +379,37 @@ class ATVT_Admin {
             <hr />
             <h2><?php echo esc_html__( 'Shortcode Usage', 'at-view-table' ); ?></h2>
             <p><?php echo esc_html__( 'Use the following shortcode to display Airtable data on any page or post:', 'at-view-table' ); ?></p>
-            <p><code>[at_view_table]</code></p>
+            <p><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status"]</code></p>
             <p><?php echo esc_html__( 'Optional parameters:', 'at-view-table' ); ?></p>
             <ul style="list-style: disc; padding-left: 24px;">
                 <li>
+                    <strong><code>table_id</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Required. Airtable Table ID to query.', 'at-view-table' ); ?>
+                </li>
+                <li>
                     <strong><code>fields</code></strong>
                     &mdash;
-                    <?php echo esc_html__( 'Columns to show in the table. Comma-separated list of Airtable field names (see table above).', 'at-view-table' ); ?>
-                    <br /><code>[at_view_table fields="Name,Email,Status"]</code>
+                    <?php echo esc_html__( 'Required. Comma-separated list of Airtable field names to show in the table.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Email,Status"]</code>
+                </li>
+                <li>
+                    <strong><code>filter_field</code></strong> / <strong><code>filter_value</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Optional. Show only rows where the selected field matches the selected value.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" filter_field="Status" filter_value="Active"]</code>
+                </li>
+                <li>
+                    <strong><code>sort_field</code></strong> / <strong><code>sort_direction</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Optional. Sort rows by one field using asc or desc.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" sort_field="Name" sort_direction="asc"]</code>
+                </li>
+                <li>
+                    <strong><code>limit</code></strong>
+                    &mdash;
+                    <?php echo esc_html__( 'Optional. Maximum number of rows to show. If omitted, the global default limit is used.', 'at-view-table' ); ?>
+                    <br /><code>[at_view_table table_id="tblXXXXXXXXXXXXXX" fields="Name,Status" limit="25"]</code>
                 </li>
             </ul>
         </div>
