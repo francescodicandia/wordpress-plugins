@@ -108,6 +108,15 @@ Questo file tiene traccia dello sviluppo del plugin. Le voci completate vengono 
 - [x] Pushare sul repo `francescodicandia/wordpress-plugins` in sottocartella `barber-booking/`
 - [ ] Creare release v1.0.0 su GitHub con allegato zip (richiede token con permesso releases)
 
+## Fase 12 — Pagina istruzioni backend
+- [x] Creare template `templates/admin/instructions.php`
+- [x] Aggiungere voce di menu "Istruzioni" in `includes/Admin/Admin.php`
+- [x] Aggiornare traduzioni `.pot`, `.po`, `.mo`
+- [x] Deploy su LocalWP e verificare accesso dal backend
+
+## Note aggiornate
+- Pagina istruzioni backend caricata su LocalWP al 2026-07-20
+
 ## Fase 10 — Rilascio e packaging
 - [x] Test end-to-end completo su LocalWP
 - [x] Verifica prenotazione, sovrapposizione, calendario, disponibilità

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Barber Booking 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-19 19:01+0200\n"
+"POT-Creation-Date: 2026-07-20 12:29+0200\n"
 "PO-Revision-Date: 2026-07-19 12:02+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,11 +29,11 @@ msgstr "Errore di attivazione del plugin"
 msgid "This plugin requires WordPress 6.4 or higher."
 msgstr "Questo plugin richiede WordPress 6.4 o superiore."
 
-#: includes/Core/Capabilities.php:35
+#: includes/Core/Capabilities.php:35 templates/admin/instructions.php:32
 msgid "Barber Superadmin"
 msgstr "Superadmin Barbiere"
 
-#: includes/Core/Capabilities.php:36
+#: includes/Core/Capabilities.php:36 templates/admin/instructions.php:36
 msgid "Barber Admin"
 msgstr "Admin Barbiere"
 
@@ -45,81 +45,81 @@ msgstr "Admin Barbiere"
 #: includes/Admin/Schedules_Controller.php:137
 #: includes/Admin/Schedules_Controller.php:154
 #: includes/Admin/Schedules_Controller.php:220
-#: templates/frontend/booking-form.php:23
+#: templates/frontend/booking-form.php:23 templates/admin/instructions.php:40
 msgid "Barber"
 msgstr "Barbiere"
 
-#: includes/Frontend/Frontend.php:58 templates/frontend/booking-form.php:33
+#: includes/Frontend/Frontend.php:85 templates/frontend/booking-form.php:33
 #: templates/frontend/booking-form.php:60
 msgid "Loading..."
 msgstr "Caricamento..."
 
-#: includes/Frontend/Frontend.php:59 templates/frontend/booking-form.php:37
+#: includes/Frontend/Frontend.php:86 templates/frontend/booking-form.php:37
 #: templates/frontend/booking-form.php:49
 #: templates/frontend/booking-form.php:66
 msgid "Next"
 msgstr "Avanti"
 
-#: includes/Frontend/Frontend.php:60 templates/frontend/booking-form.php:47
+#: includes/Frontend/Frontend.php:87 templates/frontend/booking-form.php:47
 #: templates/frontend/booking-form.php:65
 #: templates/frontend/booking-form.php:99
 #: templates/frontend/booking-form.php:109
 msgid "Back"
 msgstr "Indietro"
 
-#: includes/Frontend/Frontend.php:61 templates/frontend/booking-form.php:110
+#: includes/Frontend/Frontend.php:88 templates/frontend/booking-form.php:110
 msgid "Confirm Booking"
 msgstr "Conferma prenotazione"
 
-#: includes/Frontend/Frontend.php:62
+#: includes/Frontend/Frontend.php:89
 msgid "No available slots for this day."
 msgstr "Nessun orario disponibile per questo giorno."
 
-#: includes/Frontend/Frontend.php:63
+#: includes/Frontend/Frontend.php:90
 msgid "Select a service"
 msgstr "Seleziona un servizio"
 
-#: includes/Frontend/Frontend.php:64
+#: includes/Frontend/Frontend.php:91
 msgid "Select a barber"
 msgstr "Seleziona un barbiere"
 
-#: includes/Frontend/Frontend.php:65
+#: includes/Frontend/Frontend.php:92
 msgid "Select a date"
 msgstr "Seleziona una data"
 
-#: includes/Frontend/Frontend.php:66
+#: includes/Frontend/Frontend.php:93
 msgid "Select a time"
 msgstr "Seleziona un orario"
 
-#: includes/Frontend/Frontend.php:67
+#: includes/Frontend/Frontend.php:94
 msgid "Your name"
 msgstr "Il tuo nome"
 
-#: includes/Frontend/Frontend.php:68
+#: includes/Frontend/Frontend.php:95
 msgid "Phone number"
 msgstr "Numero di telefono"
 
-#: includes/Frontend/Frontend.php:69 templates/frontend/booking-form.php:82
+#: includes/Frontend/Frontend.php:96 templates/frontend/booking-form.php:82
 msgid "Email (optional)"
 msgstr "Email (opzionale)"
 
-#: includes/Frontend/Frontend.php:70 templates/frontend/booking-form.php:86
+#: includes/Frontend/Frontend.php:97 templates/frontend/booking-form.php:86
 msgid "Notes (optional)"
 msgstr "Note (opzionali)"
 
-#: includes/Frontend/Frontend.php:71 templates/frontend/booking-form.php:92
+#: includes/Frontend/Frontend.php:98 templates/frontend/booking-form.php:92
 msgid "I accept the privacy policy"
 msgstr "Accetto l'informativa sulla privacy"
 
-#: includes/Frontend/Frontend.php:72
+#: includes/Frontend/Frontend.php:99
 msgid "Read privacy policy"
 msgstr "Leggi l'informativa sulla privacy"
 
-#: includes/Frontend/Frontend.php:73
+#: includes/Frontend/Frontend.php:100
 msgid "Booking confirmed!"
 msgstr "Prenotazione confermata!"
 
-#: includes/Frontend/Frontend.php:74
+#: includes/Frontend/Frontend.php:101
 msgid "An error occurred. Please try again."
 msgstr "Si è verificato un errore. Riprova."
 
@@ -195,13 +195,13 @@ msgstr "Email"
 msgid "Color"
 msgstr "Colore"
 
-#: includes/Admin/Barbers_Controller.php:238 includes/Admin/Admin.php:78
-#: includes/Admin/Admin.php:79
+#: includes/Admin/Barbers_Controller.php:238 includes/Admin/Admin.php:80
+#: includes/Admin/Admin.php:81
 msgid "Stations"
 msgstr "Postazioni"
 
-#: includes/Admin/Barbers_Controller.php:249 includes/Admin/Admin.php:69
-#: includes/Admin/Admin.php:70
+#: includes/Admin/Barbers_Controller.php:249 includes/Admin/Admin.php:71
+#: includes/Admin/Admin.php:72
 msgid "Services"
 msgstr "Servizi"
 
@@ -403,26 +403,26 @@ msgstr "Importo acconto"
 msgid "Slot Interval (minutes)"
 msgstr "Intervallo slot (minuti)"
 
-#: includes/Admin/Settings.php:581
+#: includes/Admin/Settings.php:578
 msgid "— Select —"
 msgstr "— Seleziona —"
 
-#: includes/Admin/Settings.php:592
+#: includes/Admin/Settings.php:589
 msgid "Customize the appearance and white-label options."
 msgstr "Personalizza l'aspetto e le opzioni di white-label."
 
-#: includes/Admin/Settings.php:599
+#: includes/Admin/Settings.php:596
 msgid ""
 "Configure Twilio credentials. Only the superadmin can access these settings."
 msgstr ""
 "Configura le credenziali Twilio. Solo il superadmin può accedere a queste "
 "impostazioni."
 
-#: includes/Admin/Settings.php:606
+#: includes/Admin/Settings.php:603
 msgid "Configure WhatsApp confirmation and reminder messages."
 msgstr "Configura i messaggi WhatsApp di conferma e promemoria."
 
-#: includes/Admin/Settings.php:613
+#: includes/Admin/Settings.php:610
 msgid ""
 "Payments are disabled by default. Enable them only when a gateway is "
 "configured."
@@ -430,43 +430,43 @@ msgstr ""
 "I pagamenti sono disabilitati di default. Abilitali solo quando un gateway è "
 "configurato."
 
-#: includes/Admin/Settings.php:620
+#: includes/Admin/Settings.php:617
 msgid "Set the default opening hours for the shop."
 msgstr "Imposta gli orari di apertura default del negozio."
 
-#: includes/Admin/Settings.php:630 includes/Admin/Schedules_Controller.php:269
+#: includes/Admin/Settings.php:627 includes/Admin/Schedules_Controller.php:269
 msgid "Sunday"
 msgstr "Domenica"
 
-#: includes/Admin/Settings.php:631 includes/Admin/Schedules_Controller.php:270
+#: includes/Admin/Settings.php:628 includes/Admin/Schedules_Controller.php:270
 msgid "Monday"
 msgstr "Lunedì"
 
-#: includes/Admin/Settings.php:632 includes/Admin/Schedules_Controller.php:271
+#: includes/Admin/Settings.php:629 includes/Admin/Schedules_Controller.php:271
 msgid "Tuesday"
 msgstr "Martedì"
 
-#: includes/Admin/Settings.php:633 includes/Admin/Schedules_Controller.php:272
+#: includes/Admin/Settings.php:630 includes/Admin/Schedules_Controller.php:272
 msgid "Wednesday"
 msgstr "Mercoledì"
 
-#: includes/Admin/Settings.php:634 includes/Admin/Schedules_Controller.php:273
+#: includes/Admin/Settings.php:631 includes/Admin/Schedules_Controller.php:273
 msgid "Thursday"
 msgstr "Giovedì"
 
-#: includes/Admin/Settings.php:635 includes/Admin/Schedules_Controller.php:274
+#: includes/Admin/Settings.php:632 includes/Admin/Schedules_Controller.php:274
 msgid "Friday"
 msgstr "Venerdì"
 
-#: includes/Admin/Settings.php:636 includes/Admin/Schedules_Controller.php:275
+#: includes/Admin/Settings.php:633 includes/Admin/Schedules_Controller.php:275
 msgid "Saturday"
 msgstr "Sabato"
 
-#: includes/Admin/Settings.php:652
+#: includes/Admin/Settings.php:649
 msgid "Open"
 msgstr "Aperto"
 
-#: includes/Admin/Settings.php:678
+#: includes/Admin/Settings.php:675
 msgid "Save Settings"
 msgstr "Salva impostazioni"
 
@@ -602,43 +602,47 @@ msgstr "Eliminare questo orario?"
 msgid "Save Schedule"
 msgstr "Salva orario"
 
-#: includes/Admin/Admin.php:31 includes/Admin/Admin.php:32
+#: includes/Admin/Admin.php:30
 msgid "Barber Booking"
 msgstr "Barber Booking"
 
-#: includes/Admin/Admin.php:42 includes/Admin/Admin.php:43
+#: includes/Admin/Admin.php:44 includes/Admin/Admin.php:45
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: includes/Admin/Admin.php:51 includes/Admin/Admin.php:52
+#: includes/Admin/Admin.php:53 includes/Admin/Admin.php:54
 msgid "Appointments"
 msgstr "Prenotazioni"
 
-#: includes/Admin/Admin.php:60 includes/Admin/Admin.php:61
+#: includes/Admin/Admin.php:62 includes/Admin/Admin.php:63
 msgid "Calendar"
 msgstr "Calendario"
 
-#: includes/Admin/Admin.php:87 includes/Admin/Admin.php:88
+#: includes/Admin/Admin.php:89 includes/Admin/Admin.php:90
 msgid "Barbers"
 msgstr "Barbieri"
 
-#: includes/Admin/Admin.php:96 includes/Admin/Admin.php:97
+#: includes/Admin/Admin.php:98 includes/Admin/Admin.php:99
 msgid "Schedules"
 msgstr "Orari"
 
-#: includes/Admin/Admin.php:105 includes/Admin/Admin.php:106
+#: includes/Admin/Admin.php:107 includes/Admin/Admin.php:108
 msgid "Holidays"
 msgstr "Ferie"
 
-#: includes/Admin/Admin.php:120
+#: includes/Admin/Admin.php:116 includes/Admin/Admin.php:117
+msgid "Instructions"
+msgstr "Istruzioni"
+
+#: includes/Admin/Admin.php:138
 msgid "Welcome to Barber Booking."
 msgstr "Benvenuto in Barber Booking."
 
-#: includes/Admin/Admin.php:123
+#: includes/Admin/Admin.php:141
 msgid "Today"
 msgstr "Oggi"
 
-#: includes/Admin/Admin.php:139
+#: includes/Admin/Admin.php:157
 msgid "confirmed appointments"
 msgstr "prenotazioni confermate"
 
@@ -721,3 +725,213 @@ msgstr "Riepilogo"
 #: templates/frontend/booking-form.php:106
 msgid "Review your booking"
 msgstr "Riepilogo della tua prenotazione"
+
+#: templates/admin/instructions.php:16
+msgid "Introduzione"
+msgstr ""
+
+#: templates/admin/instructions.php:18
+msgid ""
+"Barber Booking è un plugin per gestire le prenotazioni online di un negozio "
+"di barbiere. I clienti possono prenotare un appuntamento scegliendo "
+"servizio, barbiere, data e orario senza registrarsi."
+msgstr ""
+
+#: templates/admin/instructions.php:21
+msgid ""
+"Dal backend puoi configurare servizi, postazioni, barbieri, orari di "
+"apertura, ferie e le notifiche WhatsApp."
+msgstr ""
+
+#: templates/admin/instructions.php:26
+msgid "Primo avvio"
+msgstr ""
+
+#: templates/admin/instructions.php:28
+msgid ""
+"Dopo l'attivazione del plugin vengono creati automaticamente tre ruoli "
+"utente:"
+msgstr ""
+
+#: templates/admin/instructions.php:33
+msgid "può configurare brand, Twilio e tutte le impostazioni del plugin."
+msgstr ""
+
+#: templates/admin/instructions.php:37
+msgid ""
+"può gestire servizi, postazioni, barbieri, orari, ferie e tutte le "
+"prenotazioni."
+msgstr ""
+
+#: templates/admin/instructions.php:41
+msgid "può visualizzare solo le proprie prenotazioni dal pannello dedicato."
+msgstr ""
+
+#: templates/admin/instructions.php:45
+msgid ""
+"Assegna i ruoli da Utenti → Aggiungi nuovo / Modifica. Il cliente non ha "
+"bisogno di un ruolo: prenota direttamente dal frontend."
+msgstr ""
+
+#: templates/admin/instructions.php:50
+msgid "Configurazione brand"
+msgstr ""
+
+#: templates/admin/instructions.php:52
+msgid ""
+"Vai in Barber Booking → Impostazioni → Brand per impostare il nome, i "
+"colori, il logo e il CSS personalizzato. Questi valori vengono applicati "
+"automaticamente al form di prenotazione."
+msgstr ""
+
+#: templates/admin/instructions.php:57
+msgid "Configurazione WhatsApp (Twilio)"
+msgstr ""
+
+#: templates/admin/instructions.php:59
+msgid ""
+"La sezione Twilio è visibile solo al superadmin. Per inviare notifiche "
+"WhatsApp:"
+msgstr ""
+
+#: templates/admin/instructions.php:62
+msgid "Crea un account Twilio e abilita il numero WhatsApp mittente."
+msgstr ""
+
+#: templates/admin/instructions.php:63
+msgid "Inserisci Account SID, Auth Token e il numero WhatsApp mittente."
+msgstr ""
+
+#: templates/admin/instructions.php:64
+msgid ""
+"Attiva la modalità test per inviare le notifiche solo al numero di test "
+"autorizzato."
+msgstr ""
+
+#: templates/admin/instructions.php:65
+msgid "Attiva la conferma e/o il reminder e imposta le ore di anticipo."
+msgstr ""
+
+#: templates/admin/instructions.php:70
+msgid "Come usare il form di prenotazione"
+msgstr ""
+
+#: templates/admin/instructions.php:72
+msgid "Inserisci il form in una pagina in uno di questi modi:"
+msgstr ""
+
+#: templates/admin/instructions.php:76
+msgid "Shortcode:"
+msgstr ""
+
+#: templates/admin/instructions.php:80
+msgid "Blocco Gutenberg:"
+msgstr ""
+
+#: templates/admin/instructions.php:81
+msgid "aggiungi il blocco \"Barber Booking Form\"."
+msgstr ""
+
+#: templates/admin/instructions.php:87
+msgid "Gestione servizi"
+msgstr ""
+
+#: templates/admin/instructions.php:89
+msgid ""
+"Barber Booking → Servizi permette di creare i servizi disponibili. Ogni "
+"servizio ha un nome, una descrizione, una durata in minuti, un prezzo e un "
+"colore per il calendario."
+msgstr ""
+
+#: templates/admin/instructions.php:94
+msgid "Gestione postazioni"
+msgstr ""
+
+#: templates/admin/instructions.php:96
+msgid ""
+"Barber Booking → Postazioni permette di definire le postazioni del negozio. "
+"Ogni appuntamento viene associato a una postazione specifica per evitare "
+"sovrapposizioni."
+msgstr ""
+
+#: templates/admin/instructions.php:101
+msgid "Gestione barbieri"
+msgstr ""
+
+#: templates/admin/instructions.php:103
+msgid ""
+"Barber Booking → Barbieri permette di creare i profili dei barbieri. Per "
+"ogni barbiere puoi indicare nome, email, telefono, colore del calendario, "
+"servizi erogati e postazioni utilizzate."
+msgstr ""
+
+#: templates/admin/instructions.php:108
+msgid "Orari di apertura e ferie"
+msgstr ""
+
+#: templates/admin/instructions.php:110
+msgid ""
+"Barber Booking → Orari e Barber Booking → Ferie permettono di definire gli "
+"orari di apertura standard e i giorni di chiusura. La disponibilità del "
+"frontend viene calcolata in automatico in base a questi dati."
+msgstr ""
+
+#: templates/admin/instructions.php:115
+msgid "Calendario e appuntamenti"
+msgstr ""
+
+#: templates/admin/instructions.php:117
+msgid ""
+"Barber Booking → Calendario mostra la vista settimanale degli appuntamenti. "
+"Barber Booking → Appuntamenti mostra l'elenco completo con filtri per data, "
+"barbiere e stato. I barbieri possono accedere al proprio pannello da Barber "
+"Booking → Pannello barbiere."
+msgstr ""
+
+#: templates/admin/instructions.php:122
+#, fuzzy
+msgid "Notifiche"
+msgstr "Notifiche"
+
+#: templates/admin/instructions.php:124
+msgid ""
+"Il plugin invia una notifica WhatsApp di conferma al cliente al momento "
+"della prenotazione e un reminder prima dell'appuntamento in base alle "
+"impostazioni. Ogni tentativo viene registrato nel log notifiche."
+msgstr ""
+
+#: templates/admin/instructions.php:129
+msgid "FAQ e troubleshooting"
+msgstr ""
+
+#: templates/admin/instructions.php:130
+msgid "Lo slot non appare disponibile"
+msgstr ""
+
+#: templates/admin/instructions.php:132
+msgid ""
+"Verifica che il barbiere sia associato al servizio, che la postazione sia "
+"attiva e che l'orario di apertura copra l'orario desiderato."
+msgstr ""
+
+#: templates/admin/instructions.php:134
+msgid "Il form non si carica"
+msgstr ""
+
+#: templates/admin/instructions.php:136
+msgid ""
+"Controlla che non ci sia un conflitto JavaScript con il tema o con altri "
+"plugin. Prova a disattivare temporaneamente altri plugin o a usare il "
+"shortcode invece del blocco."
+msgstr ""
+
+#: templates/admin/instructions.php:138
+msgid "Le notifiche WhatsApp non partono"
+msgstr ""
+
+#: templates/admin/instructions.php:140
+msgid ""
+"Verifica che Twilio sia configurato correttamente, che il numero di test sia "
+"impostato e che le notifiche siano attive in Barber Booking → Impostazioni → "
+"Notifiche."
+msgstr ""

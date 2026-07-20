@@ -25,3 +25,7 @@ Thumbs.db
 # Environment
 .env
 .env.*
+
+# Translation backup files
+*.po~
+*.mo~

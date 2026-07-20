@@ -110,6 +110,22 @@ class Admin {
 			'barber-booking-holidays',
 			array( new Holidays_Controller(), 'render' )
 		);
+
+		add_submenu_page(
+			'barber-booking',
+			__( 'Instructions', 'barber-booking' ),
+			__( 'Instructions', 'barber-booking' ),
+			\BarberBooking\Core\Capabilities::CAP_MANAGE_APPOINTMENTS,
+			'barber-booking-instructions',
+			array( $this, 'render_instructions' )
+		);
+	}
+
+	/**
+	 * Render instructions page.
+	 */
+	public function render_instructions(): void {
+		require_once \BarberBooking\PLUGIN_PATH . 'templates/admin/instructions.php';
 	}
 
 	/**
