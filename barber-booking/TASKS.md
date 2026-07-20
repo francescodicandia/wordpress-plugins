@@ -99,6 +99,14 @@ Questo file tiene traccia dello sviluppo del plugin. Le voci completate vengono 
 - Fase 9 (white-label) caricata su LocalWP al 2026-07-20
 - Test end-to-end su LocalWP (servizio, postazione, barbiere, prenotazione, sovrapposizione) al 2026-07-20
 - Packaging finale v1.0.0 generato al 2026-07-20
+- Pubblicato su GitHub in `francescodicandia/wordpress-plugins/barber-booking` al 2026-07-20
+
+## Fase 11 — Pubblicazione su GitHub
+- [x] Inizializzare repository Git locale
+- [x] Creare `.gitignore`, `README.md`, `LICENSE` GPL-2.0+
+- [x] Aggiungere workflow CI con PHPCS e syntax check
+- [x] Pushare sul repo `francescodicandia/wordpress-plugins` in sottocartella `barber-booking/`
+- [ ] Creare release v1.0.0 su GitHub con allegato zip (richiede token con permesso releases)
 
 ## Fase 10 — Rilascio e packaging
 - [x] Test end-to-end completo su LocalWP
