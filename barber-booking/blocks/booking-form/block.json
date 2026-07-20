@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "barber-booking/booking-form",
+  "title": "Barber Booking Form",
+  "category": "widgets",
+  "icon": "calendar-alt",
+  "description": "Mostra il form di prenotazione Barber Booking.",
+  "supports": {
+    "html": false
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.css",
+  "textdomain": "barber-booking"
+}

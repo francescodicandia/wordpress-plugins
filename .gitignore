@@ -11,6 +11,8 @@
 !/wordpress-*/**
 !/at-view-table/
 !/at-view-table/**
+!/barber-booking/
+!/barber-booking/**
 
 # Local/environment files.
 .env

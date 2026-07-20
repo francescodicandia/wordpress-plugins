@@ -1,0 +1,83 @@
+.bb-filters {
+	margin: 1rem 0;
+	padding: 1rem;
+	background: #f0f0f1;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.bb-filters label {
+	margin-right: 1rem;
+}
+
+.bb-calendar-nav {
+	margin: 1rem 0;
+}
+
+.bb-calendar-nav a {
+	margin-right: 0.5rem;
+}
+
+.bb-calendar-grid {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+.bb-calendar-day {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 0.5rem;
+	min-height: 120px;
+	background: #fff;
+}
+
+.bb-calendar-day h4 {
+	margin: 0 0 0.5rem;
+	font-size: 0.9rem;
+	border-bottom: 1px solid #f0f0f1;
+	padding-bottom: 0.25rem;
+}
+
+.bb-calendar-event {
+	background: #f0f6fc;
+	border-left: 3px solid var(--bb-secondary, #c9a227);
+	padding: 0.35rem;
+	margin-bottom: 0.35rem;
+	font-size: 0.85rem;
+	border-radius: 0 3px 3px 0;
+}
+
+.bb-no-events {
+	color: #757575;
+	font-size: 0.85rem;
+}
+
+.bb-dashboard-widgets {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.bb-dashboard-widget {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 1rem;
+	text-align: center;
+}
+
+.bb-big-number {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin: 0.5rem 0;
+	color: var(--bb-primary, #1a1a1a);
+}
+
+@media screen and (max-width: 782px) {
+	.bb-calendar-grid {
+		grid-template-columns: 1fr;
+	}
+}

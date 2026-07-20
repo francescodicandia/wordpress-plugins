@@ -1,0 +1,27 @@
+# Composer dependencies
+/vendor/
+
+# Build artifacts
+*.zip
+/dist/
+/build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+/.idea/
+/.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Node
+/node_modules/
+
+# Environment
+.env
+.env.*

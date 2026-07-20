@@ -1,0 +1,723 @@
+# Italian translations for Barber Booking package.
+# Copyright (C) 2026 OpenCode
+# This file is distributed under the same license as the Barber Booking package.
+# Automatically generated, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Barber Booking 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-19 19:01+0200\n"
+"PO-Revision-Date: 2026-07-19 12:02+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: includes/Core/Activator.php:40
+msgid "This plugin requires PHP 8.1 or higher."
+msgstr "Questo plugin richiede PHP 8.1 o superiore."
+
+#: includes/Core/Activator.php:41 includes/Core/Activator.php:51
+msgid "Plugin Activation Error"
+msgstr "Errore di attivazione del plugin"
+
+#: includes/Core/Activator.php:50
+msgid "This plugin requires WordPress 6.4 or higher."
+msgstr "Questo plugin richiede WordPress 6.4 o superiore."
+
+#: includes/Core/Capabilities.php:35
+msgid "Barber Superadmin"
+msgstr "Superadmin Barbiere"
+
+#: includes/Core/Capabilities.php:36
+msgid "Barber Admin"
+msgstr "Admin Barbiere"
+
+#: includes/Core/Capabilities.php:37
+#: includes/Admin/Appointments_Controller.php:65
+#: includes/Admin/Appointments_Controller.php:95
+#: includes/Admin/Holidays_Controller.php:148
+#: includes/Admin/Holidays_Controller.php:221 includes/Admin/Calendar.php:76
+#: includes/Admin/Schedules_Controller.php:137
+#: includes/Admin/Schedules_Controller.php:154
+#: includes/Admin/Schedules_Controller.php:220
+#: templates/frontend/booking-form.php:23
+msgid "Barber"
+msgstr "Barbiere"
+
+#: includes/Frontend/Frontend.php:58 templates/frontend/booking-form.php:33
+#: templates/frontend/booking-form.php:60
+msgid "Loading..."
+msgstr "Caricamento..."
+
+#: includes/Frontend/Frontend.php:59 templates/frontend/booking-form.php:37
+#: templates/frontend/booking-form.php:49
+#: templates/frontend/booking-form.php:66
+msgid "Next"
+msgstr "Avanti"
+
+#: includes/Frontend/Frontend.php:60 templates/frontend/booking-form.php:47
+#: templates/frontend/booking-form.php:65
+#: templates/frontend/booking-form.php:99
+#: templates/frontend/booking-form.php:109
+msgid "Back"
+msgstr "Indietro"
+
+#: includes/Frontend/Frontend.php:61 templates/frontend/booking-form.php:110
+msgid "Confirm Booking"
+msgstr "Conferma prenotazione"
+
+#: includes/Frontend/Frontend.php:62
+msgid "No available slots for this day."
+msgstr "Nessun orario disponibile per questo giorno."
+
+#: includes/Frontend/Frontend.php:63
+msgid "Select a service"
+msgstr "Seleziona un servizio"
+
+#: includes/Frontend/Frontend.php:64
+msgid "Select a barber"
+msgstr "Seleziona un barbiere"
+
+#: includes/Frontend/Frontend.php:65
+msgid "Select a date"
+msgstr "Seleziona una data"
+
+#: includes/Frontend/Frontend.php:66
+msgid "Select a time"
+msgstr "Seleziona un orario"
+
+#: includes/Frontend/Frontend.php:67
+msgid "Your name"
+msgstr "Il tuo nome"
+
+#: includes/Frontend/Frontend.php:68
+msgid "Phone number"
+msgstr "Numero di telefono"
+
+#: includes/Frontend/Frontend.php:69 templates/frontend/booking-form.php:82
+msgid "Email (optional)"
+msgstr "Email (opzionale)"
+
+#: includes/Frontend/Frontend.php:70 templates/frontend/booking-form.php:86
+msgid "Notes (optional)"
+msgstr "Note (opzionali)"
+
+#: includes/Frontend/Frontend.php:71 templates/frontend/booking-form.php:92
+msgid "I accept the privacy policy"
+msgstr "Accetto l'informativa sulla privacy"
+
+#: includes/Frontend/Frontend.php:72
+msgid "Read privacy policy"
+msgstr "Leggi l'informativa sulla privacy"
+
+#: includes/Frontend/Frontend.php:73
+msgid "Booking confirmed!"
+msgstr "Prenotazione confermata!"
+
+#: includes/Frontend/Frontend.php:74
+msgid "An error occurred. Please try again."
+msgstr "Si è verificato un errore. Riprova."
+
+#: includes/Admin/Barbers_Controller.php:163
+msgid "Add Barber"
+msgstr "Aggiungi barbiere"
+
+#: includes/Admin/Barbers_Controller.php:169
+#: includes/Admin/Barbers_Controller.php:222
+#: includes/Admin/Stations_Controller.php:101
+#: includes/Admin/Stations_Controller.php:136
+#: includes/Admin/Services_Controller.php:105
+#: includes/Admin/Services_Controller.php:144
+#: templates/frontend/booking-form.php:74
+msgid "Name"
+msgstr "Nome"
+
+#: includes/Admin/Barbers_Controller.php:170
+#: includes/Admin/Barbers_Controller.php:230
+#: templates/frontend/booking-form.php:78
+msgid "Phone"
+msgstr "Telefono"
+
+#: includes/Admin/Barbers_Controller.php:171
+#: includes/Admin/Barbers_Controller.php:260
+#: includes/Admin/Stations_Controller.php:102
+#: includes/Admin/Stations_Controller.php:144
+#: includes/Admin/Services_Controller.php:108
+#: includes/Admin/Services_Controller.php:164
+#: includes/Admin/Schedules_Controller.php:158
+#: includes/Admin/Schedules_Controller.php:253
+msgid "Active"
+msgstr "Attivo"
+
+#: includes/Admin/Barbers_Controller.php:172
+#: includes/Admin/Appointments_Controller.php:97
+#: includes/Admin/Stations_Controller.php:103
+#: includes/Admin/Holidays_Controller.php:152
+#: includes/Admin/Services_Controller.php:109
+#: includes/Admin/Schedules_Controller.php:159
+msgid "Actions"
+msgstr "Azioni"
+
+#: includes/Admin/Barbers_Controller.php:180
+#: includes/Admin/Stations_Controller.php:110
+#: includes/Admin/Services_Controller.php:118
+#: includes/Admin/Schedules_Controller.php:183
+msgid "Yes"
+msgstr "Sì"
+
+#: includes/Admin/Barbers_Controller.php:180
+#: includes/Admin/Stations_Controller.php:110
+#: includes/Admin/Services_Controller.php:118
+#: includes/Admin/Schedules_Controller.php:183
+msgid "No"
+msgstr "No"
+
+#: includes/Admin/Barbers_Controller.php:183
+#: includes/Admin/Stations_Controller.php:113
+#: includes/Admin/Holidays_Controller.php:187
+#: includes/Admin/Services_Controller.php:121
+#: includes/Admin/Schedules_Controller.php:186
+msgid "Edit"
+msgstr "Modifica"
+
+#: includes/Admin/Barbers_Controller.php:226
+msgid "Email"
+msgstr "Email"
+
+#: includes/Admin/Barbers_Controller.php:234
+#: includes/Admin/Stations_Controller.php:140
+#: includes/Admin/Services_Controller.php:160
+msgid "Color"
+msgstr "Colore"
+
+#: includes/Admin/Barbers_Controller.php:238 includes/Admin/Admin.php:78
+#: includes/Admin/Admin.php:79
+msgid "Stations"
+msgstr "Postazioni"
+
+#: includes/Admin/Barbers_Controller.php:249 includes/Admin/Admin.php:69
+#: includes/Admin/Admin.php:70
+msgid "Services"
+msgstr "Servizi"
+
+#: includes/Admin/Barbers_Controller.php:264
+msgid "Save Barber"
+msgstr "Salva barbiere"
+
+#: includes/Admin/Appointments_Controller.php:58
+msgid "From"
+msgstr "Dal"
+
+#: includes/Admin/Appointments_Controller.php:61
+msgid "To"
+msgstr "Al"
+
+#: includes/Admin/Appointments_Controller.php:67
+#: includes/Admin/Appointments_Controller.php:78 includes/Admin/Calendar.php:78
+#: includes/Admin/Schedules_Controller.php:139
+msgid "All"
+msgstr "Tutti"
+
+#: includes/Admin/Appointments_Controller.php:76
+#: includes/Admin/Appointments_Controller.php:96
+msgid "Status"
+msgstr "Stato"
+
+#: includes/Admin/Appointments_Controller.php:86 includes/Admin/Calendar.php:86
+#: includes/Admin/Schedules_Controller.php:148
+msgid "Filter"
+msgstr "Filtra"
+
+#: includes/Admin/Appointments_Controller.php:92
+msgid "Date & Time"
+msgstr "Data e ora"
+
+#: includes/Admin/Appointments_Controller.php:93
+msgid "Customer"
+msgstr "Cliente"
+
+#: includes/Admin/Appointments_Controller.php:94
+#: templates/frontend/booking-form.php:22
+msgid "Service"
+msgstr "Servizio"
+
+#: includes/Admin/Appointments_Controller.php:122
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: includes/Admin/Appointments_Controller.php:127
+msgid "Complete"
+msgstr "Completa"
+
+#: includes/Admin/Appointments_Controller.php:130
+msgid "Cancel this appointment?"
+msgstr "Annullare questa prenotazione?"
+
+#: includes/Admin/Appointments_Controller.php:131
+msgid "Cancel"
+msgstr "Annulla"
+
+#: includes/Admin/Appointments_Controller.php:216
+#, php-format
+msgid "Hi %1$s, this is for your appointment on %2$s at %3$s."
+msgstr "Ciao %1$s, ti ricordiamo il tuo appuntamento del %2$s alle %3$s."
+
+#: includes/Admin/Appointments_Controller.php:231
+msgid "Confirmed"
+msgstr "Confermata"
+
+#: includes/Admin/Appointments_Controller.php:232
+msgid "Completed"
+msgstr "Completata"
+
+#: includes/Admin/Appointments_Controller.php:233
+msgid "Cancelled"
+msgstr "Annullata"
+
+#: includes/Admin/Appointments_Controller.php:234
+msgid "No Show"
+msgstr "Non presentato"
+
+#: includes/Admin/Settings.php:37 includes/Admin/Settings.php:38
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: includes/Admin/Settings.php:61
+msgid "Brand & White-label"
+msgstr "Brand e white-label"
+
+#: includes/Admin/Settings.php:68
+msgid "Twilio WhatsApp"
+msgstr "Twilio WhatsApp"
+
+#: includes/Admin/Settings.php:75
+msgid "Notifications"
+msgstr "Notifiche"
+
+#: includes/Admin/Settings.php:82
+msgid "Payments"
+msgstr "Pagamenti"
+
+#: includes/Admin/Settings.php:89 includes/Admin/Settings.php:309
+msgid "Opening Hours"
+msgstr "Orari di apertura"
+
+#: includes/Admin/Settings.php:108
+msgid "Brand Name"
+msgstr "Nome brand"
+
+#: includes/Admin/Settings.php:113
+msgid "Logo URL"
+msgstr "URL logo"
+
+#: includes/Admin/Settings.php:118
+msgid "Primary Color"
+msgstr "Colore primario"
+
+#: includes/Admin/Settings.php:123
+msgid "Secondary Color"
+msgstr "Colore secondario"
+
+#: includes/Admin/Settings.php:128
+msgid "Custom CSS"
+msgstr "CSS personalizzato"
+
+#: includes/Admin/Settings.php:133
+msgid "Privacy Policy Page"
+msgstr "Pagina privacy"
+
+#: includes/Admin/Settings.php:160
+msgid "Account SID"
+msgstr "Account SID"
+
+#: includes/Admin/Settings.php:165
+msgid "Auth Token"
+msgstr "Auth Token"
+
+#: includes/Admin/Settings.php:170
+msgid "From WhatsApp Number"
+msgstr "Numero WhatsApp mittente"
+
+#: includes/Admin/Settings.php:175
+msgid "Test Mode"
+msgstr "Modalità test"
+
+#: includes/Admin/Settings.php:180
+msgid "Authorized Test Number"
+msgstr "Numero di test autorizzato"
+
+#: includes/Admin/Settings.php:185
+msgid "Content SID Confirmation"
+msgstr "Content SID conferma"
+
+#: includes/Admin/Settings.php:190
+msgid "Content SID Reminder"
+msgstr "Content SID promemoria"
+
+#: includes/Admin/Settings.php:217
+msgid "Enable WhatsApp Confirmation"
+msgstr "Abilita conferma WhatsApp"
+
+#: includes/Admin/Settings.php:222
+msgid "Enable WhatsApp Reminder"
+msgstr "Abilita promemoria WhatsApp"
+
+#: includes/Admin/Settings.php:227
+msgid "Reminder Hours (comma separated)"
+msgstr "Ore promemoria (separate da virgola)"
+
+#: includes/Admin/Settings.php:232
+msgid "Enable Email Backup"
+msgstr "Abilita backup email"
+
+#: includes/Admin/Settings.php:259
+msgid "Enable Payments"
+msgstr "Abilita pagamenti"
+
+#: includes/Admin/Settings.php:264
+msgid "Payment Gateway"
+msgstr "Gateway di pagamento"
+
+#: includes/Admin/Settings.php:273
+msgid "Payment Mode"
+msgstr "Modalità di pagamento"
+
+#: includes/Admin/Settings.php:276
+msgid "Full"
+msgstr "Intero"
+
+#: includes/Admin/Settings.php:277
+msgid "Deposit"
+msgstr "Acconto"
+
+#: includes/Admin/Settings.php:282
+msgid "Deposit Amount"
+msgstr "Importo acconto"
+
+#: includes/Admin/Settings.php:320
+msgid "Slot Interval (minutes)"
+msgstr "Intervallo slot (minuti)"
+
+#: includes/Admin/Settings.php:581
+msgid "— Select —"
+msgstr "— Seleziona —"
+
+#: includes/Admin/Settings.php:592
+msgid "Customize the appearance and white-label options."
+msgstr "Personalizza l'aspetto e le opzioni di white-label."
+
+#: includes/Admin/Settings.php:599
+msgid ""
+"Configure Twilio credentials. Only the superadmin can access these settings."
+msgstr ""
+"Configura le credenziali Twilio. Solo il superadmin può accedere a queste "
+"impostazioni."
+
+#: includes/Admin/Settings.php:606
+msgid "Configure WhatsApp confirmation and reminder messages."
+msgstr "Configura i messaggi WhatsApp di conferma e promemoria."
+
+#: includes/Admin/Settings.php:613
+msgid ""
+"Payments are disabled by default. Enable them only when a gateway is "
+"configured."
+msgstr ""
+"I pagamenti sono disabilitati di default. Abilitali solo quando un gateway è "
+"configurato."
+
+#: includes/Admin/Settings.php:620
+msgid "Set the default opening hours for the shop."
+msgstr "Imposta gli orari di apertura default del negozio."
+
+#: includes/Admin/Settings.php:630 includes/Admin/Schedules_Controller.php:269
+msgid "Sunday"
+msgstr "Domenica"
+
+#: includes/Admin/Settings.php:631 includes/Admin/Schedules_Controller.php:270
+msgid "Monday"
+msgstr "Lunedì"
+
+#: includes/Admin/Settings.php:632 includes/Admin/Schedules_Controller.php:271
+msgid "Tuesday"
+msgstr "Martedì"
+
+#: includes/Admin/Settings.php:633 includes/Admin/Schedules_Controller.php:272
+msgid "Wednesday"
+msgstr "Mercoledì"
+
+#: includes/Admin/Settings.php:634 includes/Admin/Schedules_Controller.php:273
+msgid "Thursday"
+msgstr "Giovedì"
+
+#: includes/Admin/Settings.php:635 includes/Admin/Schedules_Controller.php:274
+msgid "Friday"
+msgstr "Venerdì"
+
+#: includes/Admin/Settings.php:636 includes/Admin/Schedules_Controller.php:275
+msgid "Saturday"
+msgstr "Sabato"
+
+#: includes/Admin/Settings.php:652
+msgid "Open"
+msgstr "Aperto"
+
+#: includes/Admin/Settings.php:678
+msgid "Save Settings"
+msgstr "Salva impostazioni"
+
+#: includes/Admin/Stations_Controller.php:95
+msgid "Add Station"
+msgstr "Aggiungi postazione"
+
+#: includes/Admin/Stations_Controller.php:148
+msgid "Save Station"
+msgstr "Salva postazione"
+
+#: includes/Admin/Holidays_Controller.php:141
+msgid "Add Holiday"
+msgstr "Aggiungi ferie"
+
+#: includes/Admin/Holidays_Controller.php:149
+#: includes/Admin/Holidays_Controller.php:234
+#: templates/frontend/booking-form.php:24
+#: templates/frontend/booking-form.php:57
+msgid "Date"
+msgstr "Data"
+
+#: includes/Admin/Holidays_Controller.php:150
+msgid "Time"
+msgstr "Orario"
+
+#: includes/Admin/Holidays_Controller.php:151
+#: includes/Admin/Holidays_Controller.php:250
+msgid "Reason"
+msgstr "Motivo"
+
+#: includes/Admin/Holidays_Controller.php:158
+msgid "No upcoming holidays."
+msgstr "Nessuna ferie imminente."
+
+#: includes/Admin/Holidays_Controller.php:166
+#: includes/Admin/Holidays_Controller.php:224
+#: includes/Admin/Schedules_Controller.php:140
+#: includes/Admin/Schedules_Controller.php:173
+#: includes/Admin/Schedules_Controller.php:223
+msgid "Global"
+msgstr "Globale"
+
+#: includes/Admin/Holidays_Controller.php:176
+#: includes/Admin/Holidays_Controller.php:238
+msgid "All day"
+msgstr "Tutto il giorno"
+
+#: includes/Admin/Holidays_Controller.php:189
+msgid "Delete this holiday?"
+msgstr "Eliminare queste ferie?"
+
+#: includes/Admin/Holidays_Controller.php:190
+#: includes/Admin/Schedules_Controller.php:189
+msgid "Delete"
+msgstr "Elimina"
+
+#: includes/Admin/Holidays_Controller.php:242
+#: includes/Admin/Schedules_Controller.php:156
+#: includes/Admin/Schedules_Controller.php:245
+msgid "Start"
+msgstr "Inizio"
+
+#: includes/Admin/Holidays_Controller.php:246
+#: includes/Admin/Schedules_Controller.php:157
+#: includes/Admin/Schedules_Controller.php:249
+msgid "End"
+msgstr "Fine"
+
+#: includes/Admin/Holidays_Controller.php:254
+msgid "Save Holiday"
+msgstr "Salva ferie"
+
+#: includes/Admin/Calendar.php:67
+msgid "Previous Week"
+msgstr "Settimana precedente"
+
+#: includes/Admin/Calendar.php:68
+msgid "This Week"
+msgstr "Questa settimana"
+
+#: includes/Admin/Calendar.php:69
+msgid "Next Week"
+msgstr "Settimana successiva"
+
+#: includes/Admin/Calendar.php:108
+msgid "No appointments"
+msgstr "Nessuna prenotazione"
+
+#: includes/Admin/Services_Controller.php:99
+msgid "Add Service"
+msgstr "Aggiungi servizio"
+
+#: includes/Admin/Services_Controller.php:106
+msgid "Duration"
+msgstr "Durata"
+
+#: includes/Admin/Services_Controller.php:107
+#: includes/Admin/Services_Controller.php:156
+msgid "Price"
+msgstr "Prezzo"
+
+#: includes/Admin/Services_Controller.php:148
+msgid "Description"
+msgstr "Descrizione"
+
+#: includes/Admin/Services_Controller.php:152
+msgid "Duration (minutes)"
+msgstr "Durata (minuti)"
+
+#: includes/Admin/Services_Controller.php:168
+msgid "Save Service"
+msgstr "Salva servizio"
+
+#: includes/Admin/Schedules_Controller.php:130
+msgid "Add Schedule"
+msgstr "Aggiungi orario"
+
+#: includes/Admin/Schedules_Controller.php:155
+#: includes/Admin/Schedules_Controller.php:233
+msgid "Day"
+msgstr "Giorno"
+
+#: includes/Admin/Schedules_Controller.php:165
+msgid "No schedules found."
+msgstr "Nessun orario trovato."
+
+#: includes/Admin/Schedules_Controller.php:188
+msgid "Delete this schedule?"
+msgstr "Eliminare questo orario?"
+
+#: includes/Admin/Schedules_Controller.php:257
+msgid "Save Schedule"
+msgstr "Salva orario"
+
+#: includes/Admin/Admin.php:31 includes/Admin/Admin.php:32
+msgid "Barber Booking"
+msgstr "Barber Booking"
+
+#: includes/Admin/Admin.php:42 includes/Admin/Admin.php:43
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: includes/Admin/Admin.php:51 includes/Admin/Admin.php:52
+msgid "Appointments"
+msgstr "Prenotazioni"
+
+#: includes/Admin/Admin.php:60 includes/Admin/Admin.php:61
+msgid "Calendar"
+msgstr "Calendario"
+
+#: includes/Admin/Admin.php:87 includes/Admin/Admin.php:88
+msgid "Barbers"
+msgstr "Barbieri"
+
+#: includes/Admin/Admin.php:96 includes/Admin/Admin.php:97
+msgid "Schedules"
+msgstr "Orari"
+
+#: includes/Admin/Admin.php:105 includes/Admin/Admin.php:106
+msgid "Holidays"
+msgstr "Ferie"
+
+#: includes/Admin/Admin.php:120
+msgid "Welcome to Barber Booking."
+msgstr "Benvenuto in Barber Booking."
+
+#: includes/Admin/Admin.php:123
+msgid "Today"
+msgstr "Oggi"
+
+#: includes/Admin/Admin.php:139
+msgid "confirmed appointments"
+msgstr "prenotazioni confermate"
+
+#: includes/API/Rest_API.php:342 includes/API/Rest_API.php:392
+msgid "Item not found."
+msgstr "Elemento non trovato."
+
+#: includes/API/Rest_API.php:365
+msgid "Unable to create item."
+msgstr "Impossibile creare l'elemento."
+
+#: includes/API/Rest_API.php:706
+msgid "You must accept the privacy policy to continue."
+msgstr "Devi accettare l'informativa sulla privacy per continuare."
+
+#: includes/API/Rest_API.php:714
+msgid "Name and phone are required."
+msgstr "Nome e telefono sono obbligatori."
+
+#: includes/API/Rest_API.php:726
+msgid "Invalid service, barber or station."
+msgstr "Servizio, barbiere o postazione non validi."
+
+#: includes/API/Rest_API.php:735
+msgid "Invalid time format."
+msgstr "Formato orario non valido."
+
+#: includes/API/Rest_API.php:754
+msgid "The selected slot is no longer available. Please choose another time."
+msgstr "L'orario selezionato non è più disponibile. Scegli un altro orario."
+
+#: includes/API/Rest_API.php:770
+msgid "Unable to save customer data."
+msgstr "Impossibile salvare i dati del cliente."
+
+#: includes/API/Rest_API.php:793
+msgid "Unable to create booking."
+msgstr "Impossibile creare la prenotazione."
+
+#: includes/API/Rest_API.php:806
+msgid "Booking confirmed."
+msgstr "Prenotazione confermata."
+
+#: templates/frontend/booking-form.php:25
+msgid "Details"
+msgstr "Dettagli"
+
+#: templates/frontend/booking-form.php:26
+msgid "Confirm"
+msgstr "Conferma"
+
+#: templates/frontend/booking-form.php:32
+msgid "Choose a service"
+msgstr "Scegli un servizio"
+
+#: templates/frontend/booking-form.php:43
+msgid "Choose a barber"
+msgstr "Scegli un barbiere"
+
+#: templates/frontend/booking-form.php:48
+msgid "No preference"
+msgstr "Nessuna preferenza"
+
+#: templates/frontend/booking-form.php:55
+msgid "Choose date and time"
+msgstr "Scegli data e ora"
+
+#: templates/frontend/booking-form.php:72
+msgid "Your details"
+msgstr "I tuoi dati"
+
+#: templates/frontend/booking-form.php:94
+msgid "Read here"
+msgstr "Leggi qui"
+
+#: templates/frontend/booking-form.php:100
+msgid "Review"
+msgstr "Riepilogo"
+
+#: templates/frontend/booking-form.php:106
+msgid "Review your booking"
+msgstr "Riepilogo della tua prenotazione"

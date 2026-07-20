@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ruleset name="Barber Booking">
+	<description>Barber Booking WordPress coding standards</description>
+
+	<rule ref="WordPress">
+		<exclude name="WordPress.Files.FileName"/>
+	</rule>
+
+	<!-- Short ternaries are used for concise null-coalescing style. -->
+	<rule ref="Universal.Operators.DisallowShortTernary.Found">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Repository classes use direct DB queries by design. -->
+	<rule ref="WordPress.DB.DirectDatabaseQuery">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Allow simple properties without doc comments in repository classes. -->
+	<rule ref="Squiz.Commenting.VariableComment.Missing">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Allow simple helper functions without full param doc comments. -->
+	<rule ref="Squiz.Commenting.FunctionComment.MissingParamTag">
+		<severity>0</severity>
+	</rule>
+
+	<!-- Custom role used for barber-specific views. -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="barber"/>
+			</property>
+		</properties>
+	</rule>
+
+	<arg name="extensions" value="php"/>
+	<arg value="ps"/>
+
+	<file>barber-booking.php</file>
+	<file>uninstall.php</file>
+	<file>includes</file>
+	<file>templates</file>
+</ruleset>
