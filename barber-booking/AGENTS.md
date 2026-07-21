@@ -9,6 +9,8 @@ Caricare quando pertinenti al task:
 - WordPress Coding Standards: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/
 - Solo API native WordPress; nessun framework esterno se non esplicitamente richiesto
 - Tutte le stringhe utente internazionalizzate con text domain
+- Target locale di default: `it_IT`; ogni stringa visibile nuova va tradotta nel file `.po` e rigenerato il `.mo`
+- Mantenere README e RELEASE aggiornati per ogni versione rilasciata
 
 ---
 
@@ -37,6 +39,27 @@ Caricare quando pertinenti al task:
 6. SQL: sempre `$wpdb->prepare()`, mai concatenazione. Usa `$wpdb->prefix` per nomi tabella
 7. Verifica finale: `phpcs --standard=WordPress`
 
+### Fase 4 — Release & Maintenance
+1. Versionamento semantico (`MAJOR.MINOR.PATCH`)
+2. Prima di ogni release: `php -l` su tutti i file PHP e `phpcs --standard=WordPress`
+3. Aggiornare `.pot`, `.po`, `.mo` quando si aggiungono o modificano stringhe utente
+4. Creare zip di release pronto per l'installazione (`Plugin → Aggiungi nuovo → Carica plugin`)
+5. Aggiornare `README.md` e `RELEASE.md` con le novità della versione
+6. Per plugin complessi: aggiungere una pagina di istruzioni nel backend (menu admin)
+7. Eseguire un test end-to-end del flusso principale prima di pubblicare
+
+---
+
+## Repository
+- Inizializzare Git e mantenere `.gitignore` che escluda:
+  - `vendor/`
+  - `*.zip`, `dist/`, `build/`
+  - `.env`, `.env.local`
+  - file di backup delle traduzioni (`*.po~`, `*.mo~`)
+  - OS/IDE files (`.DS_Store`, `.vscode/`, `.idea/`)
+- Non commettere dipendenze di sviluppo, artefatti di build o secrets
+- Preferire repository privati per plugin commerciali/white-label; usare licenza GPL-compatibile se si intende distribuire su WordPress.org
+
 ---
 
 ## MUST NOT
@@ -47,3 +70,9 @@ Caricare quando pertinenti al task:
 - Omettere capability check nelle funzioni admin
 - Usare PHP short tag o funzioni deprecate
 - Omettere internazionalizzazione (i18n) nelle stringhe visibili
+- Scrivere secrets, token o credenziali direttamente nel codice
+
+## SHOULD
+- Aggiungere una pagina di istruzioni o help nel backend per plugin complessi
+- Eseguire un test end-to-end del flusso principale prima di ogni release
+- Mantenere `TASKS.md` o equivalente tracker durante lo sviluppo
