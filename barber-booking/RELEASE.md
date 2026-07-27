@@ -1,6 +1,6 @@
-# Barber Booking — Release 1.1.0
+# Barber Booking — Release 1.1.1
 
-**Versione:** 1.1.0  
+**Versione:** 1.1.1  
 **Data rilascio:** 2026-07-27  
 **Testato su:** WordPress 6.4+, PHP 8.1+, LocalWP  
 **Text domain:** `barber-booking`
@@ -10,6 +10,10 @@
 ## Panoramica
 
 Barber Booking è un plugin WordPress custom per la gestione delle prenotazioni in negozi di barbiere. È pensato per essere distribuito come plugin standalone su singoli siti WordPress, con un'architettura pronta per futuri scenari white-label/SaaS.
+
+## Novità in 1.1.1
+
+- **Fix:** "headers already sent" su submit form admin (output buffer pulito prima del redirect via `wp_redirect` filter)
 
 ## Novità in 1.1.0
 
@@ -44,7 +48,7 @@ Barber Booking è un plugin WordPress custom per la gestione delle prenotazioni 
 
 ## Installazione
 
-1. Scarica `barber-booking-v1.1.0.zip`.
+1. Scarica `barber-booking-v1.1.1.zip`.
 2. Da wp-admin vai in **Plugin → Aggiungi nuovo → Carica plugin**.
 3. Seleziona lo zip e clicca **Installa ora**.
 4. Attiva il plugin.
@@ -100,7 +104,7 @@ barber-booking/
 Generare lo zip escludendo file di sviluppo/config:
 
 ```bash
-git archive --format=zip --output=barber-booking-v1.1.0.zip HEAD
+git archive --format=zip --output=barber-booking-v1.1.1.zip HEAD
 ```
 
 Questo comando rispetta `.gitignore` (esclude `.env`, `vendor/`, `*.zip`, ecc.).
