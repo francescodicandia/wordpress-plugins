@@ -1,7 +1,7 @@
-# Barber Booking — Release 1.0.0
+# Barber Booking — Release 1.1.0
 
-**Versione:** 1.0.0  
-**Data rilascio:** 2026-07-20  
+**Versione:** 1.1.0  
+**Data rilascio:** 2026-07-27  
 **Testato su:** WordPress 6.4+, PHP 8.1+, LocalWP  
 **Text domain:** `barber-booking`
 
@@ -10,6 +10,20 @@
 ## Panoramica
 
 Barber Booking è un plugin WordPress custom per la gestione delle prenotazioni in negozi di barbiere. È pensato per essere distribuito come plugin standalone su singoli siti WordPress, con un'architettura pronta per futuri scenari white-label/SaaS.
+
+## Novità in 1.1.0
+
+- Audit di sicurezza e performance completato (20+ findings risolti)
+- **N+1 availability:** prefetch bulk di tutti gli appuntamenti del giorno in 1 query
+- **N+1 appuntamenti:** JOIN-based `get_for_range_with_relations()`
+- **Nonce defense-in-depth:** tutti gli endpoint admin CRUD verificano il nonce REST
+- **Rate-limit IP:** usa solo `REMOTE_ADDR`, soglia filtrabile via `barber_booking_rate_limit_per_hour`
+- **Twilio token:** mascherato in input, preservato al salvataggio
+- **GDPR consent:** colonna `gdpr_consent_at` in `customers`, passato da frontend
+- **Paginazione:** `page`/`per_page` su tutti i list endpoint
+- **Max 180gg future:** validazione `barber_booking_max_booking_days`
+- **Codice morto rimosso:** metodi inutilizzati in `Notification`, `Brand`, `Appointment`
+- **Paginazione impostazioni checkbox:** `preserve_data_on_uninstall`
 
 ---
 
@@ -30,7 +44,7 @@ Barber Booking è un plugin WordPress custom per la gestione delle prenotazioni 
 
 ## Installazione
 
-1. Scarica `barber-booking-v1.0.0.zip`.
+1. Scarica `barber-booking-v1.1.0.zip`.
 2. Da wp-admin vai in **Plugin → Aggiungi nuovo → Carica plugin**.
 3. Seleziona lo zip e clicca **Installa ora**.
 4. Attiva il plugin.
@@ -86,7 +100,7 @@ barber-booking/
 Generare lo zip escludendo file di sviluppo/config:
 
 ```bash
-git archive --format=zip --output=barber-booking-v1.0.1.zip HEAD
+git archive --format=zip --output=barber-booking-v1.1.0.zip HEAD
 ```
 
 Questo comando rispetta `.gitignore` (esclude `.env`, `vendor/`, `*.zip`, ecc.).

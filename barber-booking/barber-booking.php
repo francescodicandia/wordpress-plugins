@@ -3,7 +3,7 @@
  * Plugin Name:       Barber Booking
  * Plugin URI:        https://example.com/barber-booking
  * Description:       Plugin per prenotazioni di barbieri con WhatsApp, postazioni e staff.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.4
  * Requires PHP:      8.1
  * Author:            OpenCode
@@ -22,7 +22,7 @@ namespace BarberBooking;
 
 defined( 'ABSPATH' ) || exit;
 
-const PLUGIN_VERSION    = '1.0.0';
+const PLUGIN_VERSION    = '1.1.0';
 const PLUGIN_DB_VERSION = '1.0.0';
 const PLUGIN_FILE       = __FILE__;
 const PLUGIN_PATH       = __DIR__ . '/';
