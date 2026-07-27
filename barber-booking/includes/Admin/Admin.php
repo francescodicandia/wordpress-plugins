@@ -21,6 +21,20 @@ class Admin {
 	 */
 	public function init(): void {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
+		add_filter( 'wp_redirect', array( $this, 'clean_buffer_before_redirect' ), 0 );
+	}
+
+	/**
+	 * Clean output buffers before redirect to prevent "headers already sent" errors.
+	 *
+	 * @param string $location Redirect URL.
+	 * @return string
+	 */
+	public function clean_buffer_before_redirect( string $location ): string {
+		while ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+		return $location;
 	}
 
 	/**
