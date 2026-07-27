@@ -66,5 +66,12 @@ class Assets {
 			array(),
 			\BarberBooking\PLUGIN_VERSION
 		);
+
+		$brand_css = ':root { --bb-primary: ' . Brand::get_primary_color() . '; --bb-secondary: ' . Brand::get_secondary_color() . '; }';
+		$custom_css = Brand::get_custom_css();
+		if ( $custom_css ) {
+			$brand_css .= wp_strip_all_tags( $custom_css );
+		}
+		wp_add_inline_style( 'barber-booking-public', $brand_css );
 	}
 }

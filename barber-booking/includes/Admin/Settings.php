@@ -91,11 +91,19 @@ class Settings {
 			self::PAGE_SLUG
 		);
 
+		add_settings_section(
+			'barber_booking_advanced',
+			__( 'Advanced', 'barber-booking' ),
+			'__return_empty_string',
+			self::PAGE_SLUG
+		);
+
 		$this->add_brand_fields();
 		$this->add_twilio_fields();
 		$this->add_notification_fields();
 		$this->add_payment_fields();
 		$this->add_opening_hours_fields();
+		$this->add_advanced_fields();
 	}
 
 	/**
@@ -329,6 +337,23 @@ class Settings {
 	}
 
 	/**
+	 * Add advanced fields.
+	 */
+	private function add_advanced_fields(): void {
+		add_settings_field(
+			'barber_booking_preserve_data_on_uninstall',
+			__( 'Preserve Data on Uninstall', 'barber-booking' ),
+			array( $this, 'render_field' ),
+			self::PAGE_SLUG,
+			'barber_booking_advanced',
+			array(
+				'label_for' => 'preserve_data_on_uninstall',
+				'type'      => 'checkbox',
+			)
+		);
+	}
+
+	/**
 	 * Get default settings.
 	 */
 	private function get_defaults(): array {
@@ -347,6 +372,7 @@ class Settings {
 				'notification_reminder_hours'       => '24',
 				'email_backup_enabled'              => false,
 				'payment_enabled'                   => false,
+				'preserve_data_on_uninstall'        => false,
 				'payment_gateway'                   => 'stripe',
 				'payment_mode'                      => 'full',
 				'deposit_amount'                    => 0,
@@ -394,7 +420,10 @@ class Settings {
 		$sanitized['privacy_page']    = absint( $input['privacy_page'] ?? 0 );
 
 		$sanitized['twilio_account_sid']              = sanitize_text_field( $input['twilio_account_sid'] ?? '' );
-		$sanitized['twilio_auth_token']               = sanitize_text_field( $input['twilio_auth_token'] ?? '' );
+		$existing                                        = get_option( self::OPTION_NAME, array() );
+		$sanitized['twilio_auth_token']                  = ! empty( $input['twilio_auth_token'] )
+			? sanitize_text_field( $input['twilio_auth_token'] )
+			: ( $existing['twilio_auth_token'] ?? '' );
 		$sanitized['twilio_from_number']              = sanitize_text_field( $input['twilio_from_number'] ?? '' );
 		$sanitized['twilio_test_mode']                = ! empty( $input['twilio_test_mode'] );
 		$sanitized['twilio_test_number']              = sanitize_text_field( $input['twilio_test_number'] ?? '' );
@@ -406,8 +435,9 @@ class Settings {
 		$sanitized['notification_reminder_hours']       = $this->sanitize_reminder_hours( $input['notification_reminder_hours'] ?? '24' );
 		$sanitized['email_backup_enabled']              = ! empty( $input['email_backup_enabled'] );
 
-		$sanitized['payment_enabled'] = ! empty( $input['payment_enabled'] );
-		$sanitized['payment_gateway'] = sanitize_text_field( $input['payment_gateway'] ?? 'stripe' );
+		$sanitized['payment_enabled']            = ! empty( $input['payment_enabled'] );
+		$sanitized['payment_gateway']            = sanitize_text_field( $input['payment_gateway'] ?? 'stripe' );
+		$sanitized['preserve_data_on_uninstall'] = ! empty( $input['preserve_data_on_uninstall'] );
 		$sanitized['payment_mode']    = sanitize_text_field( $input['payment_mode'] ?? 'full' );
 		$sanitized['deposit_amount']  = floatval( $input['deposit_amount'] ?? 0 );
 
@@ -521,12 +551,21 @@ class Settings {
 				break;
 
 			case 'password':
-				printf(
-					'<input type="password" id="%1$s" name="%2$s" value="%3$s" class="regular-text" autocomplete="off" />',
-					esc_attr( $id ),
-					esc_attr( $name ),
-					esc_attr( (string) $value )
-				);
+				if ( 'twilio_auth_token' === $id && ! empty( $value ) ) {
+					printf(
+						'<input type="password" id="%1$s" name="%2$s" value="" placeholder="%3$s" class="regular-text" autocomplete="new-password" />',
+						esc_attr( $id ),
+						esc_attr( $name ),
+						esc_attr__( '••••••••', 'barber-booking' )
+					);
+				} else {
+					printf(
+						'<input type="password" id="%1$s" name="%2$s" value="%3$s" class="regular-text" autocomplete="off" />',
+						esc_attr( $id ),
+						esc_attr( $name ),
+						esc_attr( (string) $value )
+					);
+				}
 				break;
 
 			case 'number':
@@ -540,9 +579,9 @@ class Settings {
 
 			case 'checkbox':
 				printf(
-					'<input type="checkbox" id="%1$s" name="%2$s" value="1" %3$s />',
-					esc_attr( $id ),
+					'<input type="hidden" name="%1$s" value="0" /><input type="checkbox" id="%2$s" name="%1$s" value="1" %3$s />',
 					esc_attr( $name ),
+					esc_attr( $id ),
 					checked( (bool) $value, true, false )
 				);
 				break;

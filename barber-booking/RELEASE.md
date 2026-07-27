@@ -81,6 +81,16 @@ barber-booking/
 
 ---
 
+## Build del package
+
+Generare lo zip escludendo file di sviluppo/config:
+
+```bash
+git archive --format=zip --output=barber-booking-v1.0.1.zip HEAD
+```
+
+Questo comando rispetta `.gitignore` (esclude `.env`, `vendor/`, `*.zip`, ecc.).
+
 ## Verifica del package
 
 - PHP syntax check: passato.

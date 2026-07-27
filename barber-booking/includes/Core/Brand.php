@@ -71,15 +71,6 @@ class Brand {
 	}
 
 	/**
-	 * Get brand logo URL.
-	 *
-	 * @return string
-	 */
-	public static function get_logo(): string {
-		return (string) self::get( 'brand_logo', '' );
-	}
-
-	/**
 	 * Get primary color.
 	 *
 	 * @return string

@@ -41,16 +41,6 @@
 		loadServices();
 		bindNavigation();
 		bindForm();
-		updateBrandColors();
-	}
-
-	function updateBrandColors() {
-		if (!BarberBooking.brand) {
-			return;
-		}
-		const root = document.documentElement;
-		root.style.setProperty('--bb-primary', BarberBooking.brand.primaryColor);
-		root.style.setProperty('--bb-secondary', BarberBooking.brand.secondaryColor);
 	}
 
 	async function api(url, options) {
@@ -85,7 +75,7 @@
 
 	function renderServices() {
 		els.servicesList.innerHTML = state.services.map(function (s) {
-			return '<button type="button" class="bb-option-card" data-service-id="' + s.id + '" data-service-name="' + escapeHtml(s.name) + '" data-duration="' + s.duration + '" data-price="' + s.price + '">' +
+			return '<button type="button" class="bb-option-card" data-service-id="' + escapeHtml(String(s.id)) + '" data-service-name="' + escapeHtml(s.name) + '" data-duration="' + escapeHtml(String(s.duration)) + '" data-price="' + escapeHtml(String(s.price)) + '">' +
 				'<span class="bb-option-name">' + escapeHtml(s.name) + '</span>' +
 				'<span class="bb-option-meta">' + s.duration + ' min - ' + formatPrice(s.price) + '</span>' +
 				'</button>';
@@ -126,7 +116,7 @@
 			return;
 		}
 		els.barbersList.innerHTML = state.barbers.map(function (b) {
-			return '<button type="button" class="bb-option-card" data-barber-id="' + b.id + '" data-barber-name="' + escapeHtml(b.name) + '">' +
+			return '<button type="button" class="bb-option-card" data-barber-id="' + escapeHtml(String(b.id)) + '" data-barber-name="' + escapeHtml(b.name) + '">' +
 				'<span class="bb-option-name">' + escapeHtml(b.name) + '</span>' +
 				'</button>';
 		}).join('');
@@ -210,7 +200,7 @@
 			return;
 		}
 		els.slotsList.innerHTML = state.slots.map(function (slot) {
-			return '<button type="button" class="bb-slot-card" data-time="' + slot.time + '" data-station-id="' + slot.station_id + '" data-barber-id="' + slot.barber_id + '">' +
+			return '<button type="button" class="bb-slot-card" data-time="' + escapeHtml(slot.time) + '" data-station-id="' + escapeHtml(String(slot.station_id)) + '" data-barber-id="' + escapeHtml(String(slot.barber_id)) + '">' +
 				'<span class="bb-slot-time">' + escapeHtml(slot.time) + '</span>' +
 				'<span class="bb-slot-barber">' + escapeHtml(slot.barber_name) + '</span>' +
 				'</button>';

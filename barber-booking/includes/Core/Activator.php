@@ -34,6 +34,8 @@ class Activator {
 	 * Check system requirements.
 	 */
 	private static function check_requirements(): void {
+		load_plugin_textdomain( 'barber-booking', false, \BarberBooking\PLUGIN_DIR . 'languages' );
+
 		if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
 			deactivate_plugins( \BarberBooking\PLUGIN_BASENAME );
 			wp_die(
@@ -157,6 +159,7 @@ class Activator {
 			email varchar(255) DEFAULT NULL,
 			phone varchar(50) NOT NULL,
 			notes text,
+			gdpr_consent_at datetime DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
@@ -258,7 +261,7 @@ class Activator {
 		global $wpdb;
 
 		$table = $wpdb->prefix . 'barber_schedules';
-		$count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" ); // phpcs:ignore WordPress.DB.DirectQuery, WordPress.DB.PreparedSQL
+		$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $table ) );
 
 		if ( $count > 0 ) {
 			return;

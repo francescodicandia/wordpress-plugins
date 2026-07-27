@@ -230,11 +230,11 @@ class Rest_API {
 			$route,
 			array(
 				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => function () use ( $repo, $fields ) {
-					return $this->admin_list( $repo, $fields );
+				'callback'            => function ( \WP_REST_Request $request ) use ( $repo, $fields ) {
+					return $this->admin_list( $repo, $fields, $request );
 				},
-				'permission_callback' => function () use ( $cap ) {
-					return $this->can_admin( $cap );
+				'permission_callback' => function ( \WP_REST_Request $request ) use ( $cap ) {
+					return $this->can_admin( $cap, $request );
 				},
 			)
 		);
@@ -247,8 +247,8 @@ class Rest_API {
 				'callback'            => function ( \WP_REST_Request $request ) use ( $repo, $fields ) {
 					return $this->admin_item( $repo, $fields, $request );
 				},
-				'permission_callback' => function () use ( $cap ) {
-					return $this->can_admin( $cap );
+				'permission_callback' => function ( \WP_REST_Request $request ) use ( $cap ) {
+					return $this->can_admin( $cap, $request );
 				},
 			)
 		);
@@ -261,8 +261,8 @@ class Rest_API {
 				'callback'            => function ( \WP_REST_Request $request ) use ( $repo, $fields ) {
 					return $this->admin_create( $repo, $fields, $request );
 				},
-				'permission_callback' => function () use ( $cap ) {
-					return $this->can_admin( $cap );
+				'permission_callback' => function ( \WP_REST_Request $request ) use ( $cap ) {
+					return $this->can_admin( $cap, $request );
 				},
 			)
 		);
@@ -275,8 +275,8 @@ class Rest_API {
 				'callback'            => function ( \WP_REST_Request $request ) use ( $repo, $fields ) {
 					return $this->admin_update( $repo, $fields, $request );
 				},
-				'permission_callback' => function () use ( $cap ) {
-					return $this->can_admin( $cap );
+				'permission_callback' => function ( \WP_REST_Request $request ) use ( $cap ) {
+					return $this->can_admin( $cap, $request );
 				},
 			)
 		);
@@ -289,8 +289,8 @@ class Rest_API {
 				'callback'            => function ( \WP_REST_Request $request ) use ( $repo ) {
 					return $this->admin_delete( $repo, $request );
 				},
-				'permission_callback' => function () use ( $cap ) {
-					return $this->can_admin( $cap );
+				'permission_callback' => function ( \WP_REST_Request $request ) use ( $cap ) {
+					return $this->can_admin( $cap, $request );
 				},
 			)
 		);
@@ -302,8 +302,12 @@ class Rest_API {
 	 * @param string $capability Capability.
 	 * @return bool
 	 */
-	private function can_admin( string $capability ): bool {
-		return is_user_logged_in() && current_user_can( $capability );
+	private function can_admin( string $capability, \WP_REST_Request $request ): bool {
+		if ( ! is_user_logged_in() || ! current_user_can( $capability ) ) {
+			return false;
+		}
+		$nonce = $request->get_header( 'x_wp_nonce' );
+		return (bool) wp_verify_nonce( (string) $nonce, 'wp_rest' );
 	}
 
 	/**
@@ -313,15 +317,34 @@ class Rest_API {
 	 * @param array  $fields Field definitions.
 	 * @return \WP_REST_Response
 	 */
-	private function admin_list( string $repo, array $fields ): \WP_REST_Response {
-		$items = $repo::get_all();
-		$data  = array();
+	private function admin_list( string $repo, array $fields, \WP_REST_Request $request ): \WP_REST_Response {
+		$page     = max( 1, (int) $request->get_param( 'page' ) ?: 1 );
+		$per_page = max( 1, min( 100, (int) $request->get_param( 'per_page' ) ?: 20 ) );
+		$active   = $request->get_param( 'active' );
 
+		$args = array(
+			'page'     => $page,
+			'per_page' => $per_page,
+		);
+		if ( null !== $active ) {
+			$args['active'] = (bool) $active;
+		}
+
+		$items = $repo::get_all( $args );
+
+		$data = array();
 		foreach ( $items as $item ) {
 			$data[] = $this->map_item( $item, $fields );
 		}
 
-		return new \WP_REST_Response( $data, 200 );
+		return new \WP_REST_Response(
+			array(
+				'data'        => $data,
+				'page'        => $page,
+				'per_page'    => $per_page,
+			),
+			200
+		);
 	}
 
 	/**
@@ -383,7 +406,15 @@ class Rest_API {
 		$id   = (int) $request->get_param( 'id' );
 		$data = $this->get_data_from_request( $request, $fields );
 
-		$repo::update( $id, $data );
+		$result = $repo::update( $id, $data );
+
+		if ( false === $result ) {
+			return new \WP_Error(
+				'update_failed',
+				__( 'Unable to update item.', 'barber-booking' ),
+				array( 'status' => 500 )
+			);
+		}
 
 		$item = $repo::get( $id );
 		if ( ! $item ) {
@@ -489,7 +520,7 @@ class Rest_API {
 			case 'int':
 				return absint( $value );
 			case 'int_or_null':
-				return empty( $value ) ? null : absint( $value );
+				return '' === $value || false === $value ? null : absint( $value );
 			case 'float':
 				return floatval( $value );
 			case 'bool':
@@ -571,7 +602,8 @@ class Rest_API {
 			return true;
 		}
 
-		if ( (int) $count >= 5 ) {
+		$limit = apply_filters( 'barber_booking_rate_limit_per_hour', 5 );
+		if ( (int) $count >= $limit ) {
 			return false;
 		}
 
@@ -585,23 +617,10 @@ class Rest_API {
 	 * @return string
 	 */
 	private function get_client_ip(): string {
-		$keys = array(
-			'HTTP_CLIENT_IP',
-			'HTTP_X_FORWARDED_FOR',
-			'HTTP_X_FORWARDED',
-			'HTTP_X_CLUSTER_CLIENT_IP',
-			'HTTP_FORWARDED_FOR',
-			'HTTP_FORWARDED',
-			'REMOTE_ADDR',
-		);
-
-		foreach ( $keys as $key ) {
-			if ( ! empty( $_SERVER[ $key ] ) ) {
-				$ips = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) ) );
-				$ip  = trim( $ips[0] );
-				if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-					return $ip;
-				}
+		if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+			$ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+			if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+				return $ip;
 			}
 		}
 
@@ -643,7 +662,7 @@ class Rest_API {
 		$barbers    = array();
 
 		if ( $service_id ) {
-			$barbers = Barber::get_services( (int) $service_id );
+			$barbers = Barber::get_by_service( (int) $service_id );
 		} else {
 			$barbers = Barber::get_active();
 		}
@@ -758,9 +777,10 @@ class Rest_API {
 
 		$customer_id = Customer::upsert(
 			array(
-				'name'  => $name,
-				'phone' => $phone,
-				'email' => $email,
+				'name'         => $name,
+				'phone'        => $phone,
+				'email'        => $email,
+				'gdpr_consent' => $gdpr,
 			)
 		);
 

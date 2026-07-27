@@ -46,7 +46,7 @@ class Appointments_Controller {
 			}
 		}
 
-		$appointments = Appointment::get_for_range( $date_from, $date_to, $barber_id, null, $status );
+		$appointments = Appointment::get_for_range_with_relations( $date_from, $date_to, $barber_id, $status );
 		$barbers      = Barber::get_active();
 
 		?>
@@ -99,26 +99,21 @@ class Appointments_Controller {
 				</thead>
 				<tbody>
 				<?php foreach ( $appointments as $appointment ) : ?>
-					<?php
-					$customer = Customer::get( (int) $appointment->customer_id );
-					$service  = Service::get( (int) $appointment->service_id );
-					$barber   = Barber::get( (int) $appointment->barber_id );
-					?>
 					<tr>
 						<td>
 							<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $appointment->appointment_date ) ) ); ?><br>
 							<?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( $appointment->start_time ) ) ); ?>
 						</td>
 						<td>
-							<?php echo esc_html( $customer->name ?? '' ); ?><br>
-							<?php echo esc_html( $customer->phone ?? '' ); ?>
+							<?php echo esc_html( $appointment->customer_name ?? '' ); ?><br>
+							<?php echo esc_html( $appointment->customer_phone ?? '' ); ?>
 						</td>
-						<td><?php echo esc_html( $service->name ?? '' ); ?></td>
-						<td><?php echo esc_html( $barber->name ?? '' ); ?></td>
+						<td><?php echo esc_html( $appointment->service_name ?? '' ); ?></td>
+						<td><?php echo esc_html( $appointment->barber_name ?? '' ); ?></td>
 						<td><?php echo esc_html( $this->get_status_label( $appointment->status ) ); ?></td>
 						<td>
-							<?php if ( $customer && $customer->phone ) : ?>
-								<a href="<?php echo esc_url( $this->whatsapp_link( $customer->name, $customer->phone, $appointment ) ); ?>" target="_blank" class="button button-small">
+							<?php if ( ! empty( $appointment->customer_phone ) ) : ?>
+								<a href="<?php echo esc_url( $this->whatsapp_link( $appointment->customer_name ?? '', $appointment->customer_phone, $appointment ) ); ?>" target="_blank" class="button button-small">
 									<?php esc_html_e( 'WhatsApp', 'barber-booking' ); ?>
 								</a>
 							<?php endif; ?>

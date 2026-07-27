@@ -51,14 +51,22 @@ class Holiday {
 	 *
 	 * @return array
 	 */
-	public static function get_all(): array {
+	public static function get_all( array $args = array() ): array {
 		global $wpdb;
-		return $wpdb->get_results(
-			$wpdb->prepare(
-				'SELECT * FROM %i ORDER BY holiday_date ASC, barber_id ASC',
-				self::table()
-			)
-		);
+
+		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
+		$per_page = max( 1, (int) ( $args['per_page'] ?? 0 ) );
+		$sql      = 'SELECT * FROM %i ORDER BY holiday_date ASC, barber_id ASC';
+		$params   = array( self::table() );
+
+		if ( $per_page > 0 ) {
+			$sql     .= ' LIMIT %d OFFSET %d';
+			$params[] = $per_page;
+			$params[] = ( $page - 1 ) * $per_page;
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL
+		return $wpdb->get_results( $wpdb->prepare( $sql, ...$params ) );
 	}
 
 	/**

@@ -25,6 +25,11 @@ class Availability {
 	 * @return array
 	 */
 	public static function get_slots( int $service_id, string $date, ?int $barber_id = null ): array {
+		$max_days = apply_filters( 'barber_booking_max_booking_days', 180 );
+		if ( strtotime( $date ) > strtotime( "+{$max_days} days" ) ) {
+			return array();
+		}
+
 		$service = Service::get( $service_id );
 		if ( ! $service ) {
 			return array();
@@ -41,14 +46,53 @@ class Availability {
 		$slots       = array();
 		$interval    = self::get_slot_interval();
 
+		$holidays = Holiday::get_for_range( $date, $date, null );
+		$barber_holidays = array();
+		foreach ( $holidays as $holiday ) {
+			$bid = $holiday->barber_id ? (int) $holiday->barber_id : 0;
+			$barber_holidays[ $bid ][] = $holiday;
+		}
+
+		$all_appointments = Appointment::get_for_range( $date, $date );
+		$appointments_by_barber = array();
+		foreach ( $all_appointments as $apt ) {
+			$bid = (int) $apt->barber_id;
+			$appointments_by_barber[ $bid ][] = $apt;
+		}
+
 		foreach ( $barbers as $barber ) {
 			$barber_id = (int) $barber->id;
+
+			$relevant_holidays = array_merge(
+				$barber_holidays[ $barber_id ] ?? array(),
+				$barber_holidays[0] ?? array()
+			);
+
+			$is_all_day_off = false;
+			$partial_slots  = array();
+			foreach ( $relevant_holidays as $holiday ) {
+				if ( (int) $holiday->all_day ) {
+					$is_all_day_off = true;
+					break;
+				}
+				$partial_slots[] = array(
+					'start' => $holiday->start_time,
+					'end'   => $holiday->end_time,
+				);
+			}
+
+			if ( $is_all_day_off ) {
+				continue;
+			}
+
 			$schedules = self::get_schedules_for_barber( $barber_id, $day_of_week );
 			$stations  = Barber::get_stations( $barber_id );
 
 			if ( empty( $stations ) ) {
 				continue;
 			}
+
+			$barber_apts = $appointments_by_barber[ $barber_id ] ?? array();
 
 			foreach ( $schedules as $schedule ) {
 				$start = new \DateTime( $date . ' ' . $schedule->start_time );
@@ -62,15 +106,22 @@ class Availability {
 						break;
 					}
 
-					$station = self::find_available_station(
-						$stations,
-						$barber_id,
-						$date,
-						$start->format( 'H:i:s' ),
-						$slot_end->format( 'H:i:s' )
-					);
+					$slot_start_str = $start->format( 'H:i:s' );
+					$slot_end_str   = $slot_end->format( 'H:i:s' );
 
-					if ( $station && ! self::has_barber_overlap( $barber_id, $date, $start->format( 'H:i:s' ), $slot_end->format( 'H:i:s' ) ) ) {
+					if ( self::is_in_partial_holiday( $slot_start_str, $slot_end_str, $partial_slots ) ) {
+						$start->modify( "+{$interval} minutes" );
+						continue;
+					}
+
+					if ( self::slot_has_barber_overlap( $slot_start_str, $slot_end_str, $barber_apts ) ) {
+						$start->modify( "+{$interval} minutes" );
+						continue;
+					}
+
+					$station = self::find_free_station( $stations, $slot_start_str, $slot_end_str, $barber_apts );
+
+					if ( $station ) {
 						$slots[] = array(
 							'time'         => $start->format( 'H:i' ),
 							'time_full'    => $start->format( 'H:i:s' ),
@@ -169,26 +220,31 @@ class Availability {
 	}
 
 	/**
-	 * Find an available station.
+	 * Find a free station using pre-fetched appointments.
 	 *
-	 * @param array  $stations Stations.
-	 * @param int    $barber_id Barber ID.
-	 * @param string $date Date.
-	 * @param string $start_time Start time.
-	 * @param string $end_time End time.
+	 * @param array  $stations  Stations.
+	 * @param string $start_time Slot start (H:i:s).
+	 * @param string $end_time   Slot end (H:i:s).
+	 * @param array  $appointments Pre-fetched appointments for this barber.
 	 * @return object|null
 	 */
-	private static function find_available_station( array $stations, int $barber_id, string $date, string $start_time, string $end_time ): ?object {
+	private static function find_free_station( array $stations, string $start_time, string $end_time, array $appointments ): ?object {
 		foreach ( $stations as $station ) {
-			$overlapping = Appointment::get_overlapping(
-				$barber_id,
-				(int) $station->id,
-				$date,
-				$start_time,
-				$end_time
-			);
-
-			if ( empty( $overlapping ) ) {
+			$sid = (int) $station->id;
+			$occupied = false;
+			foreach ( $appointments as $apt ) {
+				if ( (int) $apt->station_id !== $sid ) {
+					continue;
+				}
+				if ( in_array( $apt->status, array( 'cancelled', 'no_show' ), true ) ) {
+					continue;
+				}
+				if ( $start_time < $apt->end_time && $end_time > $apt->start_time ) {
+					$occupied = true;
+					break;
+				}
+			}
+			if ( ! $occupied ) {
 				return $station;
 			}
 		}
@@ -196,23 +252,40 @@ class Availability {
 	}
 
 	/**
-	 * Check if barber has an overlapping appointment.
+	 * Check if barber has an overlapping appointment using pre-fetched data.
 	 *
-	 * @param int    $barber_id Barber ID.
-	 * @param string $date Date.
-	 * @param string $start_time Start time.
-	 * @param string $end_time End time.
+	 * @param string $start_time Slot start (H:i:s).
+	 * @param string $end_time   Slot end (H:i:s).
+	 * @param array  $appointments Pre-fetched appointments for this barber.
 	 * @return bool
 	 */
-	private static function has_barber_overlap( int $barber_id, string $date, string $start_time, string $end_time ): bool {
-		$overlapping = Appointment::get_overlapping(
-			$barber_id,
-			null,
-			$date,
-			$start_time,
-			$end_time
-		);
-		return ! empty( $overlapping );
+	private static function slot_has_barber_overlap( string $start_time, string $end_time, array $appointments ): bool {
+		foreach ( $appointments as $apt ) {
+			if ( in_array( $apt->status, array( 'cancelled', 'no_show' ), true ) ) {
+				continue;
+			}
+			if ( $start_time < $apt->end_time && $end_time > $apt->start_time ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if a time slot overlaps with partial holidays.
+	 *
+	 * @param string $start_time Slot start (H:i:s).
+	 * @param string $end_time   Slot end (H:i:s).
+	 * @param array  $holidays   Partial holidays with 'start' and 'end'.
+	 * @return bool
+	 */
+	private static function is_in_partial_holiday( string $start_time, string $end_time, array $holidays ): bool {
+		foreach ( $holidays as $holiday ) {
+			if ( $start_time < $holiday['end'] && $end_time > $holiday['start'] ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

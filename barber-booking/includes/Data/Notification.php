@@ -30,24 +30,6 @@ class Notification {
 	}
 
 	/**
-	 * Get notification by ID.
-	 *
-	 * @param int $id Notification ID.
-	 * @return object|null
-	 */
-	public static function get( int $id ): ?object {
-		global $wpdb;
-		$row = $wpdb->get_row(
-			$wpdb->prepare(
-				'SELECT * FROM %i WHERE id = %d',
-				self::table(),
-				$id
-			)
-		);
-		return $row ?: null;
-	}
-
-	/**
 	 * Log a notification.
 	 *
 	 * @param int    $appointment_id Appointment ID.
@@ -124,50 +106,4 @@ class Notification {
 		return false !== $result;
 	}
 
-	/**
-	 * Get pending notifications for reminders.
-	 *
-	 * @param int $hours Hours before appointment.
-	 * @return array
-	 */
-	public static function get_pending_reminders( int $hours ): array {
-		global $wpdb;
-
-		$now   = gmdate( 'Y-m-d H:i:s' );
-		$lower = gmdate( 'Y-m-d H:i:s', strtotime( "+{$hours} hour -30 minutes" ) );
-		$upper = gmdate( 'Y-m-d H:i:s', strtotime( "+{$hours} hour +30 minutes" ) );
-
-		return $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT n.*, a.appointment_date, a.start_time, a.customer_id, a.service_id, a.barber_id
-				FROM %i n
-				INNER JOIN %i a ON n.appointment_id = a.id
-				WHERE n.channel = 'whatsapp' AND n.type = 'reminder' AND n.status = 'pending'
-				AND n.scheduled_at BETWEEN %s AND %s
-				AND a.status = 'confirmed'
-				ORDER BY n.scheduled_at ASC",
-				self::table(),
-				$wpdb->prefix . 'barber_appointments',
-				$lower,
-				$upper
-			)
-		);
-	}
-
-	/**
-	 * Get notifications for an appointment.
-	 *
-	 * @param int $appointment_id Appointment ID.
-	 * @return array
-	 */
-	public static function get_for_appointment( int $appointment_id ): array {
-		global $wpdb;
-		return $wpdb->get_results(
-			$wpdb->prepare(
-				'SELECT * FROM %i WHERE appointment_id = %d ORDER BY created_at DESC',
-				self::table(),
-				$appointment_id
-			)
-		);
-	}
 }

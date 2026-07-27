@@ -74,8 +74,10 @@ class Customer {
 	public static function get_all( array $args = array() ): array {
 		global $wpdb;
 
-		$sql    = 'SELECT * FROM %i';
-		$params = array( self::table() );
+		$page     = max( 1, (int) ( $args['page'] ?? 1 ) );
+		$per_page = max( 1, (int) ( $args['per_page'] ?? 0 ) );
+		$sql      = 'SELECT * FROM %i';
+		$params   = array( self::table() );
 
 		if ( ! empty( $args['search'] ) ) {
 			$sql     .= ' WHERE name LIKE %s OR phone LIKE %s OR email LIKE %s';
@@ -86,6 +88,12 @@ class Customer {
 		}
 
 		$sql .= ' ORDER BY name ASC';
+
+		if ( $per_page > 0 ) {
+			$sql     .= ' LIMIT %d OFFSET %d';
+			$params[] = $per_page;
+			$params[] = ( $page - 1 ) * $per_page;
+		}
 
 		// phpcs:ignore WordPress.DB.PreparedSQL
 		return $wpdb->get_results( $wpdb->prepare( $sql, ...$params ) );
@@ -117,10 +125,17 @@ class Customer {
 			'notes' => sanitize_textarea_field( $data['notes'] ?? '' ),
 		);
 
+		$formats = array( '%s', '%s', '%s', '%s' );
+
+		if ( ! empty( $data['gdpr_consent'] ) ) {
+			$insert['gdpr_consent_at'] = current_time( 'mysql', true );
+			$formats[]                 = '%s';
+		}
+
 		$result = $wpdb->insert(
 			self::table(),
 			$insert,
-			array( '%s', '%s', '%s', '%s' )
+			$formats
 		);
 
 		return $result ? $wpdb->insert_id : false;

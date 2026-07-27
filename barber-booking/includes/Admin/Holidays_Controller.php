@@ -89,7 +89,7 @@ class Holidays_Controller {
 			}
 		}
 
-		$id = absint( $_POST['id'] ?? 0 );
+		$id = absint( wp_unslash( $_POST['id'] ?? 0 ) );
 
 		if ( $id ) {
 			Holiday::update( $id, $data );

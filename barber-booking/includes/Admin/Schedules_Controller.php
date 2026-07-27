@@ -79,7 +79,7 @@ class Schedules_Controller {
 			'active'      => ! empty( $_POST['active'] ),
 		);
 
-		$id = absint( $_POST['id'] ?? 0 );
+		$id = absint( wp_unslash( $_POST['id'] ?? 0 ) );
 
 		if ( $id ) {
 			Schedule::update( $id, $data );

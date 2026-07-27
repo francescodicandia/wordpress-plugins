@@ -76,7 +76,7 @@ class Services_Controller {
 			'active'      => ! empty( $_POST['active'] ),
 		);
 
-		$id = absint( $_POST['id'] ?? 0 );
+		$id = absint( wp_unslash( $_POST['id'] ?? 0 ) );
 
 		if ( $id ) {
 			Service::update( $id, $data );
@@ -114,7 +114,7 @@ class Services_Controller {
 				<tr>
 					<td><?php echo esc_html( $service->name ); ?></td>
 					<td><?php echo esc_html( $service->duration ); ?> min</td>
-					<td><?php echo esc_html( number_format_i18n( (float) $service->price, 2 ) ); ?> €</td>
+					<td><?php echo esc_html( number_format_i18n( (float) $service->price, 2 ) . ' ' . apply_filters( 'barber_booking_currency_symbol', '€' ) ); ?></td>
 					<td><?php echo (int) $service->active ? esc_html__( 'Yes', 'barber-booking' ) : esc_html__( 'No', 'barber-booking' ); ?></td>
 					<td>
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . self::PAGE_SLUG . '&action=edit&id=' . $service->id ) ); ?>">

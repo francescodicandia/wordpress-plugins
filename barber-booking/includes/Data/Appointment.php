@@ -83,27 +83,46 @@ class Appointment {
 	}
 
 	/**
-	 * Get appointments for a barber.
+	 * Get appointments for a range with related data (customer, service, barber).
 	 *
-	 * @param int    $barber_id Barber ID.
-	 * @param string $start_date Start date.
-	 * @param string $end_date End date.
+	 * @param string      $start_date Start date.
+	 * @param string      $end_date End date.
+	 * @param int|null    $barber_id Optional barber filter.
+	 * @param string|null $status Optional status filter.
 	 * @return array
 	 */
-	public static function get_for_barber( int $barber_id, string $start_date, string $end_date ): array {
-		return self::get_for_range( $start_date, $end_date, $barber_id );
-	}
+	public static function get_for_range_with_relations( string $start_date, string $end_date, ?int $barber_id = null, ?string $status = null ): array {
+		global $wpdb;
 
-	/**
-	 * Get appointments for a station.
-	 *
-	 * @param int    $station_id Station ID.
-	 * @param string $start_date Start date.
-	 * @param string $end_date End date.
-	 * @return array
-	 */
-	public static function get_for_station( int $station_id, string $start_date, string $end_date ): array {
-		return self::get_for_range( $start_date, $end_date, null, $station_id );
+		$customers_table = $wpdb->prefix . 'barber_customers';
+		$services_table  = $wpdb->prefix . 'barber_services';
+		$barbers_table   = $wpdb->prefix . 'barber_barbers';
+
+		$sql    = "SELECT a.*, c.name AS customer_name, c.phone AS customer_phone, s.name AS service_name, b.name AS barber_name
+			FROM %i AS a
+			LEFT JOIN {$customers_table} AS c ON a.customer_id = c.id
+			LEFT JOIN {$services_table} AS s ON a.service_id = s.id
+			LEFT JOIN {$barbers_table} AS b ON a.barber_id = b.id
+			WHERE a.appointment_date BETWEEN %s AND %s";
+		$params = array(
+			self::table(),
+			$start_date,
+			$end_date,
+		);
+
+		if ( null !== $barber_id ) {
+			$sql     .= ' AND a.barber_id = %d';
+			$params[] = $barber_id;
+		}
+		if ( null !== $status ) {
+			$sql     .= ' AND a.status = %s';
+			$params[] = $status;
+		}
+
+		$sql .= ' ORDER BY a.appointment_date ASC, a.start_time ASC';
+
+		// phpcs:ignore WordPress.DB.PreparedSQL
+		return $wpdb->get_results( $wpdb->prepare( $sql, ...$params ) );
 	}
 
 	/**
@@ -121,12 +140,7 @@ class Appointment {
 		global $wpdb;
 
 		$sql    = "SELECT * FROM %i WHERE appointment_date = %s AND status NOT IN ('cancelled', 'no_show') AND (
-			(barber_id = %d AND (
-				(start_time < %s AND end_time > %s)
-			))
-			OR (station_id = %d AND station_id IS NOT NULL AND (
-				(start_time < %s AND end_time > %s)
-			))
+			(barber_id = %d AND start_time < %s AND end_time > %s)
 		)";
 		$params = array(
 			self::table(),
@@ -134,10 +148,14 @@ class Appointment {
 			$barber_id,
 			$end_time,
 			$start_time,
-			$station_id,
-			$end_time,
-			$start_time,
 		);
+
+		if ( null !== $station_id ) {
+			$sql     .= ' OR (station_id = %d AND start_time < %s AND end_time > %s)';
+			$params[] = $station_id;
+			$params[] = $end_time;
+			$params[] = $start_time;
+		}
 
 		if ( null !== $exclude_id ) {
 			$sql     .= ' AND id != %d';
